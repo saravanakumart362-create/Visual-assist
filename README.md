@@ -80,7 +80,7 @@ is this project's own Python code, run in the browser by
 **Publish it with GitHub Pages:** push the project to GitHub, then in the
 repository open *Settings → Pages*, choose *Deploy from a branch*, select
 branch `main` and folder `/ (root)`, and save. After a minute the page is at
-`https://<your-user-name>.github.io/<repository-name>/`.
+`https://saravanakumart362-create.github.io/Visual-assist/`.
 
 **Preview it on your own PC:**
 
