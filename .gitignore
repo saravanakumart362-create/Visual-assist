@@ -1,0 +1,16 @@
+__pycache__/
+.pytest_cache/
+
+# Downloaded on first run; the trained weights/doors.pt and
+# weights/currency.pt are part of the project and are kept.
+weights/yolov5nu.pt
+weights/yolov8n-cls.pt
+/*.pt
+
+# Downloaded speech model, datasets and training output.
+models/
+training/datasets/
+training/runs/
+
+# Personal data: registered faces and the learned user profile.
+data/

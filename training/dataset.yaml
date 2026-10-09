@@ -1,0 +1,23 @@
+# Dataset description for training/train.py.
+#
+# Expected layout (YOLO format, one .txt label file per image):
+#
+#   dataset/
+#     images/train/*.jpg   images/val/*.jpg
+#     labels/train/*.txt   labels/val/*.txt
+#
+# Each label line is: <class id> <x centre> <y centre> <width> <height>,
+# all normalised to 0-1. Tools such as Roboflow or LabelImg export this.
+
+path: dataset
+train: images/train
+val: images/val
+
+names:
+  0: door
+  1: chair
+  2: table
+  3: sofa
+  4: bottle
+  5: cup
+  6: person

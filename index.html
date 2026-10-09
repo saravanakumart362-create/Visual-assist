@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual Assist</title>
+<meta name="description" content="A deep learning aid that guides blind people around obstacles by voice. Try its guidance code in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="demo/demo.css">
+</head>
+<body>
+<a class="skip" href="#demo">Skip to the demo</a>
+
+<div class="page">
+<header class="masthead">
+  <p class="eyebrow">Navigating the Unseen</p>
+  <h1>Visual Assist</h1>
+  <p class="lede">A wearable aid for blind people. A camera recognises what is in the room, a LiDAR measures how far away it is, and a voice guides the wearer to what they ask for, around whatever stands in the way.</p>
+</header>
+
+<main>
+
+<section id="demo" class="demo" aria-labelledby="demo-title">
+  <div class="section-head">
+    <h2 id="demo-title">Ask for the door</h2>
+    <p>The room below is simulated. The guidance is not: it is the project's own Python code, the same that runs on the device, working here in your browser. <span id="drag-hint">Drag the door or the obstacles anywhere, then ask.</span></p>
+  </div>
+
+  <div class="stage">
+    <div class="floor">
+      <div class="floor-frame">
+        <canvas id="room" role="img" aria-label="The room seen from above, with the user at the bottom, obstacles in the middle and the door at the top."></canvas>
+      </div>
+      <p id="caption" class="caption" aria-hidden="true">The line being spoken appears here.</p>
+      <ul class="legend" aria-label="What the drawing shows">
+        <li><span class="key key-door"></span>Door</li>
+        <li><span class="key key-obstacle"></span>Obstacle</li>
+        <li><span class="key key-lidar"></span>LiDAR reading</li>
+        <li><span class="key key-route"></span>Planned route</li>
+        <li><span class="key key-path"></span>Path walked</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <fieldset class="rooms">
+        <legend>Room</legend>
+        <div class="choices">
+          <button type="button" class="choice" data-room="chair" aria-pressed="true">Chair in the way</button>
+          <button type="button" class="choice" data-room="opening" aria-pressed="false">Wall with an opening</button>
+          <button type="button" class="choice" id="random" aria-pressed="false">Random room</button>
+        </div>
+        <div class="edit">
+          <button type="button" class="quiet" id="add">Add an obstacle</button>
+          <button type="button" class="quiet" id="remove" disabled>Remove selected</button>
+        </div>
+      </fieldset>
+
+      <div class="settings">
+        <label for="language">Spoken language
+          <select id="language">
+            <option value="en">English</option>
+            <option value="ml">Malayalam · മലയാളം</option>
+            <option value="hi">Hindi · हिन्दी</option>
+            <option value="ta">Tamil · தமிழ்</option>
+          </select>
+        </label>
+        <label for="speed">Speed
+          <select id="speed">
+            <option value="1">1×</option>
+            <option value="2" selected>2×</option>
+            <option value="4">4×</option>
+          </select>
+        </label>
+        <label class="check" for="sound"><input type="checkbox" id="sound"> Speak the lines aloud</label>
+      </div>
+
+      <button type="button" class="primary" id="guide">Guide me to the door</button>
+      <p id="status" class="status" role="status"></p>
+
+      <div class="transcript-box">
+        <h3 id="transcript-title">What is said</h3>
+        <ol id="transcript" class="transcript" aria-live="polite" aria-labelledby="transcript-title"></ol>
+        <p id="transcript-empty" class="empty">The conversation appears here. On the device it is spoken through an earphone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="how-title">
+  <div class="section-head">
+    <h2 id="how-title">How it finds the way</h2>
+    <p>Each time you ask, the demo above goes through these four stages. They repeat after every instruction, so a turn that was too wide or a step that was too short is corrected as it happens.</p>
+  </div>
+  <ol class="steps">
+    <li>
+      <h3>Look</h3>
+      <p>The head turns to five angles and takes a picture at each. A YOLOv5 model names what it sees: door, chair, table, person. In the demo this is the pale wedge that flashes in front of the user.</p>
+    </li>
+    <li>
+      <h3>Measure</h3>
+      <p>The head turns to the target and the LiDAR measures the distance. The reading is checked against how large the object looks in the picture, because a beam aimed at a door may be stopped by a chair in front of it.</p>
+    </li>
+    <li>
+      <h3>Plan</h3>
+      <p>The LiDAR sweeps 144 degrees in 6 degree steps. Each reading becomes an obstacle on a map with 10 cm cells, and the A* algorithm finds the shortest route that stays 35 cm clear of all of them. These are the red dots and the dashed line.</p>
+    </li>
+    <li>
+      <h3>Speak</h3>
+      <p>One action at a time: first a turn, and a walk only once the user faces a clear stretch. No walk is longer than what was just measured as clear, less a margin for uneven steps, and never more than five steps.</p>
+    </li>
+  </ol>
+</section>
+
+<section aria-labelledby="more-title">
+  <div class="section-head">
+    <h2 id="more-title">What else it does</h2>
+  </div>
+  <dl class="features">
+    <div>
+      <dt>Warns of obstacles</dt>
+      <dd>"Bottle detected at 0.4 meters." The warning comes earlier the faster the wearer walks, and becomes "Stop" when a collision is less than a second and a half away.</dd>
+    </div>
+    <div>
+      <dt>Adapts to the wearer</dt>
+      <dd>It says more to someone who keeps pausing, and less on a trip made three times before. Walking speed is read from the LiDAR, since the device has no motion sensor.</dd>
+    </div>
+    <div>
+      <dt>Recognises people</dt>
+      <dd>Registered faces are announced by name, the most familiar first. A stranger can be registered by voice.</dd>
+    </div>
+    <div>
+      <dt>Reads banknotes</dt>
+      <dd>Indian notes from ₹10 to ₹2000, held up to the camera. A doubtful reading is offered as a guess, never stated as fact.</dd>
+    </div>
+    <div>
+      <dt>Speaks four languages</dt>
+      <dd>English, Malayalam, Hindi and Tamil, switched by saying "speak in Malayalam". Try the language menu in the demo.</dd>
+    </div>
+    <div>
+      <dt>Answers questions</dt>
+      <dd>"Where is the door?" "What is around me?" "How far?" "Who is this?" Commands are spoken; an earphone carries the replies.</dd>
+    </div>
+  </dl>
+</section>
+
+<section aria-labelledby="device-title">
+  <div class="section-head">
+    <h2 id="device-title">On the device</h2>
+    <p>The demo replaces the hardware with a simulation. This is what the simulation stands in for.</p>
+  </div>
+  <table class="parts">
+    <thead><tr><th scope="col">Part</th><th scope="col">Job</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Raspberry Pi 4</th><td>Runs everything: detection, route planning, speech.</td></tr>
+      <tr><th scope="row">Pi Camera</th><td>Pictures for YOLOv5 object detection, face recognition and banknotes.</td></tr>
+      <tr><th scope="row">TF-Luna LiDAR</th><td>Distance along the centre of the picture, up to 8 m.</td></tr>
+      <tr><th scope="row">Pan-tilt servos, ESP8266</th><td>Turn the camera and LiDAR to look around and to sweep.</td></tr>
+      <tr><th scope="row">USB microphone, earphone</th><td>Spoken commands in, spoken guidance out.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section aria-labelledby="measured-title">
+  <div class="section-head">
+    <h2 id="measured-title">Measured so far</h2>
+    <p>These figures come from simulated rooms and from photos the models never saw during training. Nothing here has yet been measured on the assembled device.</p>
+  </div>
+  <table class="results">
+    <thead><tr><th scope="col">What</th><th scope="col">Result</th><th scope="col">How it was measured</th></tr></thead>
+    <tbody>
+      <tr>
+        <th scope="row">Guidance</th>
+        <td><span class="figure">997 of 1,000</span> trips reached the door; the other three ended with the assistant saying it had stopped. Nobody was walked into anything.</td>
+        <td>Random cluttered rooms in the simulator; half the simulated users turned and stepped imprecisely.</td>
+      </tr>
+      <tr>
+        <th scope="row">Door detection</th>
+        <td><span class="figure">17 of 20</span> large indoor doors found. When it reports a door it is right about 7 times in 10.</td>
+        <td>229 held-out photos. Small and distant doors are often missed.</td>
+      </tr>
+      <tr>
+        <th scope="row">Banknotes</th>
+        <td><span class="figure">390 of 400</span> notes named correctly and stated plainly; none stated wrongly. All 225 photos without a note were recognised as such.</td>
+        <td>625 held-out photos from the same collection as the training photos; not yet tried on a live camera.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section aria-labelledby="run-title">
+  <div class="section-head">
+    <h2 id="run-title">Run it yourself</h2>
+    <p>The same simulation runs in a terminal, and with a webcam the assistant answers typed questions about what it sees.</p>
+  </div>
+  <pre class="code" tabindex="0"><code>pip install opencv-python ultralytics pyyaml pyserial gTTS
+
+python main.py simulate               # this demo, in the terminal
+python main.py --keyboard --show      # live on a webcam
+python -m pytest                      # the tests</code></pre>
+  <p class="links"><a id="repo" href="README.md">Source code and full documentation</a></p>
+</section>
+
+</main>
+
+<footer class="foot">
+  <p>Software for the B.Tech project report "Navigating the Unseen: A Deep Learning Based Aid for the Blind", Government College of Engineering Kannur, 2025.</p>
+  <p id="engine" class="engine">Guidance code: not loaded yet.</p>
+</footer>
+</div>
+
+<script src="demo/demo.js" defer></script>
+</body>
+</html>

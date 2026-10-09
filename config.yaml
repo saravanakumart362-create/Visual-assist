@@ -1,0 +1,86 @@
+# Visual Assist configuration. Every key is optional; the defaults are in
+# visual_assist/config.py. "auto" means: use the real device if it is
+# there, otherwise carry on without it. Paths are relative to this file.
+
+camera:
+  backend: auto          # auto | picamera2 | opencv
+  index: 0               # webcam number when the Pi Camera is not used
+  width: 640
+  height: 480
+  hfov_deg: 62.2         # Pi Camera Module V2
+  vfov_deg: 48.8
+
+detector:
+  # Everyday objects: COCO-pretrained YOLOv5-nano (downloaded on first run).
+  weights: weights/yolov5nu.pt
+  confidence: 0.35
+  imgsz: 640
+  # Doors: the YOLOv5 model trained by training/train.py.
+  extra:
+    - weights: weights/doors.pt
+      classes: [door]
+      confidence: 0.4
+      imgsz: 512
+
+lidar:
+  backend: auto          # auto | tfluna | none
+  port: /dev/serial0
+  baudrate: 115200
+
+servo:
+  backend: auto          # auto | esp8266 | gpio | none
+  port: /dev/ttyUSB0     # ESP8266 on USB
+  pan_center: 90
+  tilt_center: 90
+  pan_invert: false
+  scan_angles: [-60, -30, 0, 30, 60]
+  settle_s: 0.4
+
+speech:
+  backend: auto          # auto | offline | gtts | console
+  language: en           # en | ml (Malayalam) | hi (Hindi) | ta (Tamil)
+  rate: 160
+
+listener:
+  backend: auto          # auto | vosk | google | keyboard | none
+  vosk_model: models/vosk-model-small-en-us-0.15
+  language: en-IN
+  wake_word: ""          # e.g. "assistant" to ignore other conversation
+  timeout_s: 6
+
+faces:
+  enabled: true
+  dir: data/faces
+  tolerance: 0.5
+  every_n_frames: 3
+  announce_cooldown_s: 20
+
+navigation:
+  step_length_m: 0.6     # the user's step; guidance counts in these
+  obstacle_warn_m: 1.0   # warning distance when standing still
+  arrive_m: 0.6          # stop this far from the target (arm's reach)
+  warn_cooldown_s: 4
+  center_deadband_deg: 15
+  lost_frames: 3
+
+planner:                 # routes around obstacles (needs LiDAR and pan-tilt)
+  enabled: true
+  sweep_half_angle_deg: 72
+  sweep_step_deg: 6
+  clearance_m: 0.35      # room kept between the user and obstacles
+  max_range_m: 6.0
+
+adaptation:              # adjusting to how the user moves
+  enabled: true
+  profile: data/profile.json
+  reaction_s: 1.5        # warn this many seconds of walking ahead
+  max_warn_m: 3.0
+  pause_s: 6             # standing still this long counts as a pause
+  hesitant_pauses: 2     # pauses in two minutes before describing more
+  crowded_people: 3
+  familiar_after: 3      # trips to a target before guidance turns brief
+
+currency:
+  weights: weights/currency.pt
+  confidence: 0.8        # below this the answer is given as a guess
+  minimum: 0.5           # below this it is treated as no note at all

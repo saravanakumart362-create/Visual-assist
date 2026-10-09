@@ -1,0 +1,26 @@
+# Core: enough to run detection with a camera.
+numpy
+opencv-python
+ultralytics
+pyyaml
+pyserial
+
+# Voice input (pick one): offline Vosk, or online Google Speech Recognition.
+vosk
+sounddevice
+SpeechRecognition
+PyAudio
+
+# Natural voices for Malayalam, Hindi and Tamil (needs internet). English
+# works without it, through espeak-ng on the Pi or the Windows voice.
+gTTS
+
+# Face recognition (builds dlib; on the Pi first: sudo apt install cmake).
+face_recognition
+
+# Servos wired directly to the Pi's GPIO (not needed with the ESP8266).
+gpiozero; platform_machine == "aarch64" or platform_machine == "armv7l"
+
+# Preparing the training datasets, and running the tests.
+pillow
+pytest
