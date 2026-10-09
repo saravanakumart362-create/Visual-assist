@@ -88,6 +88,73 @@
   </div>
 </section>
 
+<section id="live" class="live" aria-labelledby="live-title">
+  <div class="section-head">
+    <h2 id="live-title">Try it on your own camera</h2>
+    <p>Here your camera takes the place of the simulated room. The project's detection models and its assistant run inside this page: point the camera at a room, or hold up a banknote, and ask. The picture stays on your device. Nothing is uploaded.</p>
+  </div>
+
+  <div class="stage">
+    <div class="floor">
+      <div class="view-frame">
+        <video id="camera" playsinline muted aria-label="Your camera, with what the assistant recognises outlined."></video>
+        <canvas id="boxes" aria-hidden="true"></canvas>
+        <p id="camera-off" class="placeholder">The camera is off.</p>
+      </div>
+      <p id="live-caption" class="caption" aria-hidden="true">The line being spoken appears here.</p>
+      <p id="live-meter" class="meter"></p>
+    </div>
+
+    <div class="panel">
+      <button type="button" class="primary" id="camera-toggle">Start the camera</button>
+      <p id="live-status" class="status" role="status">The first start downloads the models, about 40 MB.</p>
+
+      <fieldset class="asks" id="asks" disabled>
+        <legend>Ask</legend>
+        <div class="choices">
+          <button type="button" class="choice" data-ask="What is around me?">What is around me?</button>
+          <button type="button" class="choice" data-ask="Where is the door?">Where is the door?</button>
+          <button type="button" class="choice" data-ask="How far?">How far?</button>
+          <button type="button" class="choice" data-ask="What note is this?">What note is this?</button>
+          <button type="button" class="choice" data-ask="Guide me to the chair">Guide me to the chair</button>
+          <button type="button" class="choice" data-ask="Stop">Stop</button>
+        </div>
+        <form id="ask-form" class="ask-form">
+          <label class="sr-only" for="ask">Type a question</label>
+          <input type="text" id="ask" autocomplete="off" placeholder="Type a question">
+          <button type="submit" class="quiet">Ask</button>
+          <button type="button" class="quiet" id="mic" hidden>Speak</button>
+        </form>
+      </fieldset>
+
+      <div class="settings">
+        <label for="live-language">Spoken language
+          <select id="live-language">
+            <option value="en">English</option>
+            <option value="ml">Malayalam · മലയാളം</option>
+            <option value="hi">Hindi · हिन्दी</option>
+            <option value="ta">Tamil · தமிழ்</option>
+          </select>
+        </label>
+        <label class="check" for="live-sound"><input type="checkbox" id="live-sound" checked> Speak the answers aloud</label>
+      </div>
+
+      <div class="transcript-box">
+        <h3 id="live-transcript-title">What is said</h3>
+        <ol id="live-transcript" class="transcript" aria-live="polite" aria-labelledby="live-transcript-title"></ol>
+        <p id="live-transcript-empty" class="empty">Questions and answers appear here.</p>
+      </div>
+    </div>
+  </div>
+
+  <ul class="notes">
+    <li>Distances here are estimates from how large things look, so they begin with "about". The device measures them with its LiDAR.</li>
+    <li>Directions are given as the camera sees them. On a phone, use the back camera and point it the way you are facing.</li>
+    <li>Finding a way around obstacles needs the LiDAR sweep, so that part stays in the simulated room above. Face recognition is not included in the page.</li>
+    <li>Questions are asked in English, whatever language the answers are in.</li>
+  </ul>
+</section>
+
 <section aria-labelledby="how-title">
   <div class="section-head">
     <h2 id="how-title">How it finds the way</h2>
@@ -211,5 +278,6 @@ python -m pytest                      # the tests</code></pre>
 </div>
 
 <script src="demo/demo.js" defer></script>
+<script src="demo/live.js" defer></script>
 </body>
 </html>

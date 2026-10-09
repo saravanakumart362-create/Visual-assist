@@ -713,7 +713,9 @@ class Assistant:
             reach, approx = fuse_distance(distance if on_axis else None, self._visual(det))
             sighting = Sighting(det.label, pixel_bearing(det.cx, det.frame_width, cam.hfov_deg),
                                 reach, det.confidence, approx=approx)
-            if on_axis and has_arrived(reach, nav):
+            # With no distance to go by, a target that has grown to fill the
+            # whole picture is as near as the camera can tell.
+            if on_axis and (has_arrived(reach, nav) or (reach is None and det.fills_frame)):
                 self._arrive(sighting)
                 return
 

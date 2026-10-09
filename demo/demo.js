@@ -11,6 +11,7 @@
   const FILES = [
     "__init__.py", "config.py", "navigator.py", "planner.py", "phrases.py",
     "adaptation.py", "commands.py", "detector.py", "assistant.py", "simulation.py",
+    "lidar.py", "servo.py", "currency.py", "live.py",
     "locales/en.json", "locales/hi.json", "locales/ml.json", "locales/ta.json",
   ];
   const VIEW = { left: -3.6, right: 3.6, bottom: -0.7, top: 6.5 }; // metres, a square
@@ -273,9 +274,13 @@
     }
   }
 
+  // A voice for the language, an Indian one where the browser has it.
   function voiceFor(language) {
     if (!("speechSynthesis" in window)) return null;
-    return speechSynthesis.getVoices().find((voice) => voice.lang.toLowerCase().startsWith(language)) || null;
+    const voices = speechSynthesis.getVoices();
+    const code = (voice) => voice.lang.toLowerCase().replace("_", "-");
+    return voices.find((voice) => code(voice) === `${language}-in`)
+      || voices.find((voice) => code(voice).startsWith(language)) || null;
   }
 
   // Speaks a line and resolves when it has been said; null if it cannot be spoken.
@@ -435,8 +440,14 @@
     });
   }
 
+  // Loads Python and the project's files once; both demos on the page share it.
+  let pythonLoading = null;
+  function python() {
+    if (!pythonLoading) pythonLoading = loadPython();
+    return pythonLoading;
+  }
+
   async function loadPython() {
-    if (state.engine !== "idle") return;
     setEngine("loading");
     try {
       await loadScript(`${PYODIDE}pyodide.js`);
@@ -458,15 +469,21 @@ def guide(room, language):
 `);
       state.python = pyodide.globals.get("guide");
       setEngine("ready");
+      return pyodide;
     } catch (error) {
       console.warn("Guidance code not loaded:", error);
       setEngine("failed");
-    }
-    if (state.waiting) {
-      state.waiting = false;
-      startGuide();
+      throw error;
+    } finally {
+      if (state.waiting) {
+        state.waiting = false;
+        startGuide();
+      }
     }
   }
+
+  // The live camera demo (demo/live.js) uses the same Python and helpers.
+  window.visualAssist = { python, loadScript, voiceFor, languageNames: LANGUAGE_NAMES };
 
   // ------------------------------------------------------------------- rooms
 
@@ -670,6 +687,6 @@ def guide(room, language):
       resize();
       // Fetch the Python runtime once the page has settled; it is only
       // needed for rooms and languages that were not recorded.
-      setTimeout(loadPython, 600);
+      setTimeout(() => python().catch(() => {}), 600);
     });
 })();

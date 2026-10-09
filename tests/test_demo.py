@@ -79,13 +79,51 @@ def test_the_page_loads_every_file_the_guidance_needs(tmp_path):
     check = (
         "import json, sys; sys.path.insert(0, sys.argv[1]);"
         "from visual_assist import simulation;"
+        "from visual_assist.live import LiveAssistant;"
         "run = simulation.record({'door': [0.5, 4.5, 0.45]}, [[0.1, 2.0, 0.3]], 'ta');"
-        "print(json.dumps(run['reached']))"
+        "said = [];"
+        "live = LiveAssistant(['door'], lambda text, language, urgent: said.append(text));"
+        "live.hear('where is the door');"
+        "live.see(json.dumps({'w': 640, 'h': 480, 'detections': [['door', 0.8, 270, 100, 370, 340]]}));"
+        "print(json.dumps([run['reached'], said]))"
     )
     done = subprocess.run([sys.executable, "-I", "-S", "-c", check, str(tmp_path)],
                           capture_output=True, text=True, timeout=120)
     assert done.returncode == 0, done.stderr
-    assert done.stdout.strip() == "true"
+    assert json.loads(done.stdout) == [
+        True, ["The door is straight ahead, about 4.5 meters away."]]
+
+
+def test_the_browser_models_match_the_settings_the_device_uses():
+    """demo/models is made from config.yaml by demo/export_models.py."""
+    from visual_assist import config
+
+    cfg = config.load(ROOT / "config.yaml")
+    manifest = json.loads((DEMO / "models" / "models.json").read_text(encoding="utf-8"))
+    main, doors = manifest["detectors"]
+    advice = "run: python demo/export_models.py"
+
+    assert (main["size"], main["confidence"]) == (cfg.detector.imgsz, cfg.detector.confidence), advice
+    assert main["keep"] is None and "sofa" in main["names"] and "couch" not in main["names"], advice
+    extra = cfg.detector.extra[0]
+    assert (doors["size"], doors["confidence"]) == (extra["imgsz"], extra["confidence"]), advice
+    assert [doors["names"][index] for index in doors["keep"]] == extra["classes"], advice
+    assert "none" in manifest["currency"]["names"] and "500" in manifest["currency"]["names"]
+    for spec in [main, doors, manifest["currency"]]:
+        assert (DEMO / "models" / spec["file"]).stat().st_size > 1_000_000, spec["file"]
+
+
+def test_git_does_not_ignore_the_files_the_page_needs():
+    """An ignored file never reaches GitHub, and the page then fails there."""
+    if not (ROOT / ".git").exists() or shutil.which("git") is None:
+        pytest.skip("not a git checkout")
+    needed = ["index.html", ".nojekyll", "demo/demo.js", "demo/live.js", "demo/demo.css",
+              "demo/recordings.json", "demo/models/models.json", "demo/models/doors.onnx",
+              "demo/models/yolov5nu.onnx", "demo/models/currency.onnx",
+              "visual_assist/__init__.py", "visual_assist/live.py"]
+    ignored = subprocess.run(["git", "check-ignore", *needed], cwd=ROOT,
+                             capture_output=True, text=True).stdout.split()
+    assert ignored == []
 
 
 def test_the_page_points_at_files_that_exist():

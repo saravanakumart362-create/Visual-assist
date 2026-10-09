@@ -103,8 +103,12 @@ def frame_motion(previous, current, hfov_deg: float):
     """Compare two camera frames: (degrees turned, fraction of picture changed).
 
     Either value is None when it cannot be told, including when the frames
-    are not images at all (as in tests without a camera).
+    are not images at all (as in tests without a camera). A frame that can
+    measure this itself (see live.LiveFrame) is asked to.
     """
+    measure = getattr(current, "motion_since", None)
+    if measure is not None:
+        return measure(previous)
     try:
         import cv2
         import numpy as np

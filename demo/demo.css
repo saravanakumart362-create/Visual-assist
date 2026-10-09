@@ -37,6 +37,9 @@
 
 * { box-sizing: border-box; }
 
+/* Something hidden stays hidden, whatever display its class gives it. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -272,6 +275,74 @@ button, select { font: inherit; color: inherit; }
 .transcript .user .line { color: var(--muted); font-style: italic; }
 .transcript li:last-child .line { font-weight: 700; }
 .empty { color: var(--muted); font-size: 0.9375rem; }
+
+/* ------------------------------------------------------------- live camera */
+
+.view-frame {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--wash);
+  overflow: hidden;
+}
+.view-frame.portrait { aspect-ratio: 3 / 4; }
+#camera, #boxes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+
+.meter { min-height: 1.5em; font: 0.8125rem/1.5 var(--font-mono); color: var(--muted); }
+
+.asks { display: grid; gap: 0.625rem; }
+.asks legend { margin-bottom: 0.5rem; }
+.asks:disabled .choice, .asks:disabled .quiet, .asks:disabled input { opacity: 0.5; cursor: default; }
+.asks .choice { font-size: 0.9375rem; }
+
+.ask-form { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.ask-form input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  padding: 0.4375rem 0.625rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+#mic[data-listening="true"] { border-color: var(--lidar); color: var(--lidar); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.live .settings { grid-template-columns: minmax(0, 1fr); }
+
+.notes {
+  display: grid;
+  gap: 0.5rem;
+  max-width: var(--measure);
+  margin: 1.75rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
 
 /* ---------------------------------------------------------------- sections */
 

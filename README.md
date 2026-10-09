@@ -71,11 +71,24 @@ the conversation and a map of the path walked.
 
 ## Demo page
 
-`index.html` is the same simulation as a web page: visitors drag the door
-and the obstacles around a room, choose a language, press "Guide me to the
-door" and watch the route being found and spoken. The guidance on the page
-is this project's own Python code, run in the browser by
-[Pyodide](https://pyodide.org); only the room and the sensors are simulated.
+`index.html` is a web page with two demonstrations, both driven by this
+project's own Python code, run in the browser by
+[Pyodide](https://pyodide.org):
+
+- **A simulated room.** Visitors drag the door and the obstacles around,
+  choose a language, press "Guide me to the door" and watch the route being
+  found and spoken. Only the room and the sensors are simulated.
+- **Their own camera.** Visitors start their camera and ask "what is around
+  me", "where is the door", "what note is this" or "guide me to the chair",
+  by typing or (in Chrome and Edge) by voice. The detection, door and
+  banknote models run in the page, converted to ONNX and run by
+  [ONNX Runtime](https://onnxruntime.ai); the picture never leaves the
+  visitor's device. This is what `python main.py --keyboard` does on a
+  laptop, with nothing to install.
+
+The camera demonstration has no LiDAR and no turning head, so distances are
+camera estimates ("about 2 meters") and there is no route planning in it;
+face recognition is not included. Its first start downloads about 40 MB.
 
 **Publish it with GitHub Pages:** push the project to GitHub, then in the
 repository open *Settings → Pages*, choose *Deploy from a branch*, select
@@ -96,6 +109,15 @@ and work even where Pyodide cannot load. After changing the guidance code,
 refresh that file with `python demo/make_recordings.py`; the tests fail
 while it is out of date. Keep the empty `.nojekyll` file: without it GitHub
 Pages hides `visual_assist/__init__.py` and the page cannot load the code.
+
+The models the camera demonstration uses are in `demo/models/`. After
+retraining a model, or changing a confidence threshold in `config.yaml`,
+convert them again:
+
+```bash
+pip install onnx onnxslim
+python demo/export_models.py
+```
 
 ## How guidance works
 
@@ -378,6 +400,7 @@ visual_assist/
   listener.py                speech-to-text
   faces.py                   face recognition and registration
   simulation.py              simulated room and hardware (tests, simulate)
+  live.py                    the assistant fed by a web page's camera
 firmware/esp8266_pan_tilt/   Arduino sketch for the servo controller
 training/                    dataset preparation and training scripts
 weights/                     the trained models
@@ -392,8 +415,10 @@ this is a fresh implementation of that description.
 **Verified on a PC:** the test suite; guidance in simulation (997 of 1,000
 random rooms reached, the other three ending with a spoken stop, nothing
 ever touched); the door and banknote models on held-out photos (figures
-above); speech synthesis in all four languages; the demo page in a headless
-browser; and a short live trial on a webcam with typed questions.
+above); speech synthesis in all four languages; a short live trial on a
+webcam with typed questions; and the demo page in a headless browser, its
+camera part with saved photos standing in for the camera. The camera part
+has not been tried on a real camera or on a phone.
 
 **Not verified:** anything on the Raspberry Pi itself — the Pi Camera, the
 TF-Luna, the servos and ESP8266, the microphone, and face recognition (its

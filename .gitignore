@@ -7,8 +7,9 @@ weights/yolov5nu.pt
 weights/yolov8n-cls.pt
 /*.pt
 
-# Downloaded speech model, datasets and training output.
-models/
+# Downloaded speech model (the top-level folder only: demo/models holds
+# the demo page's models and must be kept), datasets and training output.
+/models/
 training/datasets/
 training/runs/
 

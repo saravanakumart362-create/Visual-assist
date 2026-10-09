@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional
 
-from .navigator import position_of
+from .navigator import EDGE_PX, position_of
 
 log = logging.getLogger(__name__)
 
@@ -33,6 +33,19 @@ class Detection:
     def spans_center(self) -> bool:
         """True if the camera axis (where the LiDAR points) falls on the object."""
         return self.box[0] <= self.frame_width / 2.0 <= self.box[2]
+
+    @property
+    def fills_frame(self) -> bool:
+        """True if the object runs off all four sides of the picture.
+
+        Its size can then no longer be judged, but one thing is certain:
+        the camera is right in front of it.
+        """
+        if not self.frame_height:
+            return False
+        x1, y1, x2, y2 = self.box
+        return (x1 <= EDGE_PX and y1 <= EDGE_PX
+                and x2 >= self.frame_width - EDGE_PX and y2 >= self.frame_height - EDGE_PX)
 
 
 def center_detection(detections) -> Optional[Detection]:
