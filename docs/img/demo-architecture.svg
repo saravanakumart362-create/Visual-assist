@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 512" width="820" height="512" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="The demo page&#x27;s parts. GitHub Pages only serves files. In the visitor&#x27;s browser, the page&#x27;s three scripts sit between ONNX Runtime Web, which runs the three models on the camera&#x27;s pictures, and Pyodide, which runs the project&#x27;s own Python.">
+<title>The demo page&#x27;s parts. GitHub Pages only serves files. In the visitor&#x27;s browser, the page&#x27;s three scripts sit between ONNX Runtime Web, which runs the three models on the camera&#x27;s pictures, and Pyodide, which runs the project&#x27;s own Python.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="820" height="512" fill="#ffffff"/>
+<rect x="20" y="16" width="790" height="40" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/>
+<text x="415" y="40.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">GitHub Pages: static files only. Nothing is sent back to it</text>
+<rect x="20" y="112" width="790" height="384" rx="8" fill="none" stroke="#13202c" stroke-width="1.5"/>
+<text x="36" y="134" font-size="13" fill="#13202c" font-weight="700">The visitor&#x27;s browser</text>
+<rect x="36" y="150" width="190" height="216" rx="6" fill="#eef1f4" stroke="#53626f" stroke-width="1" stroke-dasharray="5 4"/>
+<text x="131" y="170" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">ONNX Runtime Web</text>
+<rect x="52" y="244" width="158" height="72" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="131" y="268.5" font-size="12.5" fill="#13202c" text-anchor="middle">yolov5nu.onnx</text><text x="131" y="284.5" font-size="12.5" fill="#13202c" text-anchor="middle">doors.onnx</text><text x="131" y="300.5" font-size="12.5" fill="#13202c" text-anchor="middle">currency.onnx</text>
+<rect x="290" y="150" width="200" height="330" rx="6" fill="#eef1f4" stroke="#53626f" stroke-width="1" stroke-dasharray="5 4"/>
+<text x="390" y="170" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">The page&#x27;s scripts</text>
+<rect x="306" y="184" width="168" height="52" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="390" y="206.5" font-size="12.5" fill="#13202c" text-anchor="middle">demo.js</text><text x="390" y="222.5" font-size="12.5" fill="#13202c" text-anchor="middle">the simulated room</text>
+<rect x="306" y="254" width="168" height="52" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="390" y="276.5" font-size="12.5" fill="#13202c" text-anchor="middle">live.js</text><text x="390" y="292.5" font-size="12.5" fill="#13202c" text-anchor="middle">the camera section</text>
+<rect x="306" y="398" width="168" height="52" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="390" y="420.5" font-size="12.5" fill="#13202c" text-anchor="middle">device.js</text><text x="390" y="436.5" font-size="12.5" fill="#13202c" text-anchor="middle">the device section</text>
+<rect x="604" y="150" width="192" height="330" rx="6" fill="#eef1f4" stroke="#53626f" stroke-width="1" stroke-dasharray="5 4"/>
+<text x="700" y="170" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">Pyodide: Python</text>
+<rect x="619" y="184" width="162" height="52" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="700" y="214.5" font-size="12.5" fill="#13202c" text-anchor="middle">simulation.record()</text>
+<rect x="619" y="254" width="162" height="52" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="700" y="284.5" font-size="12.5" fill="#13202c" text-anchor="middle">live.LiveAssistant</text>
+<rect x="619" y="362" width="162" height="96" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="700" y="390.5" font-size="12.5" fill="#13202c" text-anchor="middle">the project&#x27;s modules:</text><text x="700" y="406.5" font-size="12.5" fill="#13202c" text-anchor="middle">assistant, planner,</text><text x="700" y="422.5" font-size="12.5" fill="#13202c" text-anchor="middle">navigator, phrases,</text><text x="700" y="438.5" font-size="12.5" fill="#13202c" text-anchor="middle">adaptation, commands</text>
+<rect x="52" y="398" width="158" height="52" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/>
+<text x="131" y="420.5" font-size="12.5" fill="#13202c" text-anchor="middle">The visitor&#x27;s</text><text x="131" y="436.5" font-size="12.5" fill="#13202c" text-anchor="middle">camera</text>
+<line x1="131" y1="56" x2="131" y2="146" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="131" y="88" font-size="11.5" fill="#53626f" text-anchor="middle" font-family="Consolas, Menlo, monospace" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">demo/models</text>
+<line x1="390" y1="56" x2="390" y2="146" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="390" y="88" font-size="11.5" fill="#53626f" text-anchor="middle" font-family="Consolas, Menlo, monospace" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">recordings.json, device.json</text>
+<line x1="700" y1="56" x2="700" y2="146" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="700" y="88" font-size="11.5" fill="#53626f" text-anchor="middle" font-family="Consolas, Menlo, monospace" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">visual_assist/ files</text>
+<line x1="474" y1="201" x2="615" y2="201" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="619" y1="219" x2="478" y2="219" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="546.5" y="195" font-size="11" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">room, language</text>
+<text x="546.5" y="234" font-size="11" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">events to replay</text>
+<line x1="474" y1="271" x2="615" y2="271" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="619" y1="289" x2="478" y2="289" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="546.5" y="265" font-size="11" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">detections, questions</text>
+<text x="546.5" y="304" font-size="11" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">sentences</text>
+<line x1="306" y1="271" x2="206" y2="271" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="210" y1="289" x2="310" y2="289" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="258" y="265" font-size="11" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">picture</text>
+<text x="258" y="304" font-size="11" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">boxes, scores</text>
+<path d="M210 424 H334 V310" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="258" y="416" font-size="11" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">pictures</text>
+<line x1="404" y1="306" x2="404" y2="394" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="444" y1="398" x2="444" y2="310" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="398" y="354" font-size="11" fill="#53626f" text-anchor="end" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">answer</text>
+<text x="450" y="354" font-size="11" fill="#53626f" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">ask</text>
+<line x1="700" y1="306" x2="700" y2="362" fill="none" stroke="#53626f" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="708" y="338" font-size="11" fill="#53626f" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">both run on</text>
+</svg>

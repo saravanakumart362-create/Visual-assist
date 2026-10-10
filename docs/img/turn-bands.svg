@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 380" width="830" height="380" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Two dials seen from above. Left: the words for where something is, changing at 15, 45 and 135 degrees. Right: the turn asked for, changing at 15, 60 and 135 degrees.">
+<title>Two dials seen from above. Left: the words for where something is, changing at 15, 45 and 135 degrees. Right: the turn asked for, changing at 15, 60 and 135 degrees.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="830" height="380" fill="#ffffff"/>
+<text x="215" y="30" font-size="15" fill="#13202c" text-anchor="middle" font-weight="700">Where something is said to be</text>
+<path d="M215 222 L215 118 A104 104 0 0 1 241.9 121.5 Z" fill="#fde9b0" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M215 222 L188.1 121.5 A104 104 0 0 1 215 118 Z" fill="#fde9b0" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M215 222 L241.9 121.5 A104 104 0 0 1 288.5 148.5 Z" fill="#cfe6e3" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M215 222 L141.5 148.5 A104 104 0 0 1 188.1 121.5 Z" fill="#cfe6e3" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M215 222 L288.5 148.5 A104 104 0 0 1 288.5 295.5 Z" fill="#eef1f4" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M215 222 L141.5 295.5 A104 104 0 0 1 141.5 148.5 Z" fill="#eef1f4" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M215 222 L288.5 295.5 A104 104 0 0 1 215 326 Z" fill="#d5dbe1" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M215 222 L215 326 A104 104 0 0 1 141.5 295.5 Z" fill="#d5dbe1" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="215" cy="222" r="104" fill="none" stroke="#13202c" stroke-width="1.5"/>
+<text x="233.8" y="155.7" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">15°</text>
+<text x="196.2" y="155.7" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">15°</text>
+<text x="266.5" y="174.5" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">45°</text>
+<text x="163.5" y="174.5" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">45°</text>
+<text x="266.5" y="277.5" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">135°</text>
+<text x="163.5" y="277.5" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">135°</text>
+<text x="215" y="104" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">straight ahead</text>
+<text x="274" y="123.8" font-size="12.5" fill="#13202c" font-weight="700">slightly to your right</text>
+<text x="156" y="123.8" font-size="12.5" fill="#13202c" text-anchor="end" font-weight="700">slightly to your left</text>
+<text x="333" y="226" font-size="12.5" fill="#13202c" font-weight="700">to your right</text>
+<text x="97" y="226" font-size="12.5" fill="#13202c" text-anchor="end" font-weight="700">to your left</text>
+<text x="260.2" y="335" font-size="12.5" fill="#13202c" font-weight="700">behind you on the right</text>
+<text x="169.8" y="335" font-size="12.5" fill="#13202c" text-anchor="end" font-weight="700">behind you on the left</text>
+<path d="M215 196 L206 230 L215 224 L224 230 Z" fill="#13202c"/>
+<text x="215" y="252" font-size="11.5" fill="#53626f" text-anchor="middle">the wearer,</text>
+<text x="215" y="266" font-size="11.5" fill="#53626f" text-anchor="middle">facing up</text>
+<text x="615" y="30" font-size="15" fill="#13202c" text-anchor="middle" font-weight="700">The turn that is asked for</text>
+<path d="M615 222 L615 118 A104 104 0 0 1 641.9 121.5 Z" fill="#fde9b0" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M615 222 L588.1 121.5 A104 104 0 0 1 615 118 Z" fill="#fde9b0" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M615 222 L641.9 121.5 A104 104 0 0 1 705.1 170 Z" fill="#cfe6e3" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M615 222 L524.9 170 A104 104 0 0 1 588.1 121.5 Z" fill="#cfe6e3" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M615 222 L705.1 170 A104 104 0 0 1 688.5 295.5 Z" fill="#eef1f4" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M615 222 L541.5 295.5 A104 104 0 0 1 524.9 170 Z" fill="#eef1f4" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M615 222 L688.5 295.5 A104 104 0 0 1 615 326 Z" fill="#d5dbe1" stroke="#ffffff" stroke-width="1.5"/>
+<path d="M615 222 L615 326 A104 104 0 0 1 541.5 295.5 Z" fill="#d5dbe1" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="615" cy="222" r="104" fill="none" stroke="#13202c" stroke-width="1.5"/>
+<text x="633.8" y="155.7" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">15°</text>
+<text x="596.2" y="155.7" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">15°</text>
+<text x="678" y="189.6" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">60°</text>
+<text x="552" y="189.6" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">60°</text>
+<text x="666.5" y="277.5" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">135°</text>
+<text x="563.5" y="277.5" font-size="11.5" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">135°</text>
+<text x="615" y="104" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">no turn</text>
+<text x="686.8" y="118.4" font-size="12.5" fill="#13202c" font-weight="700">turn slightly right</text>
+<text x="686.8" y="134.4" font-size="11.5" fill="#53626f">expect about 30°</text>
+<text x="543.2" y="118.4" font-size="12.5" fill="#13202c" text-anchor="end" font-weight="700">turn slightly left</text>
+<text x="543.2" y="134.4" font-size="11.5" fill="#53626f" text-anchor="end">expect about 30°</text>
+<text x="732" y="241.4" font-size="12.5" fill="#13202c" font-weight="700">turn right</text>
+<text x="732" y="257.4" font-size="11.5" fill="#53626f">expect about 90°</text>
+<text x="498" y="241.4" font-size="12.5" fill="#13202c" text-anchor="end" font-weight="700">turn left</text>
+<text x="498" y="257.4" font-size="11.5" fill="#53626f" text-anchor="end">expect about 90°</text>
+<text x="660.2" y="335" font-size="12.5" fill="#13202c" font-weight="700">turn around</text>
+<text x="660.2" y="351" font-size="11.5" fill="#53626f">expect about 180°</text>
+<text x="569.8" y="335" font-size="12.5" fill="#13202c" text-anchor="end" font-weight="700">turn around</text>
+<text x="569.8" y="351" font-size="11.5" fill="#53626f" text-anchor="end">expect about 180°</text>
+<path d="M615 196 L606 230 L615 224 L624 230 Z" fill="#13202c"/>
+<text x="615" y="252" font-size="11.5" fill="#53626f" text-anchor="middle">the wearer,</text>
+<text x="615" y="266" font-size="11.5" fill="#53626f" text-anchor="middle">facing up</text>
+</svg>

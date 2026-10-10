@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 424" width="820" height="424" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Seen from above: a sweep of 25 readings in a room with a wall and one opening. 14 readings met something and became 29 obstacle discs; the opening stays open.">
+<title>Seen from above: a sweep of 25 readings in a room with a wall and one opening. 14 readings met something and became 29 obstacle discs; the opening stays open.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="820" height="424" fill="#ffffff"/>
+<clipPath id="room"><rect x="12" y="14" width="440" height="396"/></clipPath>
+<g clip-path="url(#room)">
+<circle cx="46" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="58.4" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="70.8" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="83.2" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="95.6" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="108" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="120.4" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="132.8" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="145.2" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="157.6" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="170" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="182.4" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="194.8" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="207.2" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="219.6" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="232" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="244.4" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="256.8" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="356" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="368.4" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="380.8" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="393.2" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="405.6" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="418" cy="243" r="6.2" fill="#dfe5ea"/>
+<circle cx="306.4" cy="88" r="27.9" fill="#f5b800" stroke="#13202c" stroke-width="1"/>
+<line x1="232" y1="398" x2="-121.8" y2="283" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="-107.8" y2="246.7" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="-90.2" y2="212" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="-69" y2="179.3" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="63.6" y2="246.4" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="97.7" y2="248.8" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="123.3" y2="248.5" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="146.1" y2="249.1" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="163.6" y2="244.4" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="183.6" y2="249.1" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="199.8" y2="246.6" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="216.3" y2="248.2" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="232" y2="249.2" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="247.7" y2="248.2" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="292.7" y2="112.3" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="326.4" y2="107.4" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="383.3" y2="58.2" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="418" y2="75.8" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="450.7" y2="97" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="366.3" y2="248.8" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="400.4" y2="246.4" fill="none" stroke="#cf2e45" stroke-width="1" opacity="0.55"/>
+<line x1="232" y1="398" x2="533" y2="179.3" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="554.2" y2="212" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="571.8" y2="246.7" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="232" y1="398" x2="585.8" y2="283" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<circle cx="63.6" cy="246.4" r="11.9" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="75" cy="247.2" r="10.5" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="86.3" cy="248" r="10.5" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="97.7" cy="248.8" r="10.5" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="106.2" cy="248.7" r="9.7" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="114.8" cy="248.6" r="9.7" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="123.3" cy="248.5" r="9.7" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="134.7" cy="248.8" r="9" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="146.1" cy="249.1" r="9" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="154.8" cy="246.8" r="8.8" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="163.6" cy="244.4" r="8.8" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="173.6" cy="246.8" r="8.2" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="183.6" cy="249.1" r="8.2" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="191.7" cy="247.9" r="8.1" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="199.8" cy="246.6" r="8.1" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="208" cy="247.4" r="7.9" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="216.3" cy="248.2" r="7.9" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="224.1" cy="248.7" r="7.8" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="232" cy="249.2" r="7.8" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="239.9" cy="248.7" r="7.8" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="247.7" cy="248.2" r="7.9" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="292.7" cy="112.3" r="15.3" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="304" cy="110.7" r="15.3" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="315.2" cy="109.1" r="15.3" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="326.4" cy="107.4" r="15.5" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="366.3" cy="248.8" r="10.5" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="377.7" cy="248" r="10.5" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="389" cy="247.2" r="10.5" fill="#9fb0bf" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="400.4" cy="246.4" r="11.9" fill="#44556a" stroke="#ffffff" stroke-width="0.75"/>
+<circle cx="146.1" cy="249.1" r="2.5" fill="#cf2e45"/>
+<circle cx="232" cy="249.2" r="2.5" fill="#cf2e45"/>
+<circle cx="326.4" cy="107.4" r="2.5" fill="#cf2e45"/>
+<circle cx="163.6" cy="244.4" r="2.5" fill="#cf2e45"/>
+<circle cx="199.8" cy="246.6" r="2.5" fill="#cf2e45"/>
+<circle cx="292.7" cy="112.3" r="2.5" fill="#cf2e45"/>
+<circle cx="183.6" cy="249.1" r="2.5" fill="#cf2e45"/>
+<circle cx="247.7" cy="248.2" r="2.5" fill="#cf2e45"/>
+<circle cx="366.3" cy="248.8" r="2.5" fill="#cf2e45"/>
+<circle cx="400.4" cy="246.4" r="2.5" fill="#cf2e45"/>
+<circle cx="63.6" cy="246.4" r="2.5" fill="#cf2e45"/>
+<circle cx="123.3" cy="248.5" r="2.5" fill="#cf2e45"/>
+<circle cx="97.7" cy="248.8" r="2.5" fill="#cf2e45"/>
+<circle cx="216.3" cy="248.2" r="2.5" fill="#cf2e45"/>
+<circle cx="232" cy="398" r="6" fill="#13202c"/>
+</g>
+<rect x="12" y="14" width="440" height="396" rx="4" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<text x="306.4" y="92" font-size="12" fill="#13202c" text-anchor="middle" font-weight="700">door</text>
+<circle cx="183.6" cy="279" r="10" fill="#13202c"/><text x="183.6" y="283.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">1</text>
+<circle cx="486" cy="40" r="10" fill="#13202c"/><text x="486" y="44.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">1</text>
+<text x="504" y="44" font-size="12.5" fill="#13202c">Each reading that meets something becomes a</text><text x="504" y="60" font-size="12.5" fill="#13202c">disc. Its radius is half the gap to the next</text><text x="504" y="76" font-size="12.5" fill="#13202c">ray, so discs on one wall touch.</text>
+<circle cx="69.6" cy="275.2" r="10" fill="#13202c"/><text x="69.6" y="279.7" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">2</text>
+<circle cx="486" cy="110" r="10" fill="#13202c"/><text x="486" y="114.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">2</text>
+<text x="504" y="114" font-size="12.5" fill="#13202c">Where a wall is seen at a slant the hits are</text><text x="504" y="130" font-size="12.5" fill="#13202c">further apart. Hits on one surface are joined</text><text x="504" y="146" font-size="12.5" fill="#13202c">with extra discs (15 here, in lighter grey).</text>
+<circle cx="306.4" cy="243" r="10" fill="#13202c"/><text x="306.4" y="247.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">3</text>
+<circle cx="486" cy="180" r="10" fill="#13202c"/><text x="486" y="184.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">3</text>
+<text x="504" y="184" font-size="12.5" fill="#13202c">A jump this big between neighbouring rays is</text><text x="504" y="200" font-size="12.5" fill="#13202c">the edge of something, with open floor beside</text><text x="504" y="216" font-size="12.5" fill="#13202c">it. It is left open: this is the way through.</text>
+<circle cx="352.9" cy="122.1" r="10" fill="#13202c"/><text x="352.9" y="126.6" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">4</text>
+<circle cx="486" cy="250" r="10" fill="#13202c"/><text x="486" y="254.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">4</text>
+<text x="504" y="254" font-size="12.5" fill="#13202c">The readings beyond the opening are on the</text><text x="504" y="270" font-size="12.5" fill="#13202c">door itself.</text>
+<circle cx="486" cy="310" r="3" fill="#cf2e45"/>
+<text x="504" y="314" font-size="12" fill="#53626f">a LiDAR reading</text>
+<circle cx="486" cy="330" r="6" fill="#44556a"/>
+<text x="504" y="334" font-size="12" fill="#53626f">obstacle made from a reading</text>
+<circle cx="486" cy="350" r="6" fill="#9fb0bf"/>
+<text x="504" y="354" font-size="12" fill="#53626f">obstacle added to join two readings</text>
+<circle cx="486" cy="370" r="6" fill="#dfe5ea"/>
+<text x="504" y="374" font-size="12" fill="#53626f">the real wall</text>
+</svg>

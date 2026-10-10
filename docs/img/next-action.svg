@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 606" width="800" height="606" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="The chain of questions that picks the next action: no route means blocked; a first leg off to one side means a turn; otherwise as many steps as are safe; and when not even one step fits, the following turn, arrival, a slight turn away, or blocked.">
+<title>The chain of questions that picks the next action: no route means blocked; a first leg off to one side means a turn; otherwise as many steps as are safe; and when not even one step fits, the following turn, arrival, a slight turn away, or blocked.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="800" height="606" fill="#ffffff"/>
+<path d="M36 14 H392 L404 31 L392 48 H36 L24 31 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="35.5" font-size="12.5" fill="#13202c" text-anchor="middle">Has the planner found any route at all?</text>
+<line x1="404" y1="31" x2="484" y2="31" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="446" y="24" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">no</text>
+<rect x="488" y="14" width="294" height="34" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/><text x="635" y="35.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">Blocked</text>
+<line x1="214" y1="48" x2="214" y2="74" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="66" font-size="12" fill="#53626f" font-weight="700">yes</text>
+<path d="M36 78 H392 L404 103 L392 128 H36 L24 103 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="99.5" font-size="12.5" fill="#13202c" text-anchor="middle">Is the first leg more than 15° off? (25.5° if the</text><text x="214" y="115.5" font-size="12.5" fill="#13202c" text-anchor="middle">wearer has just turned)</text>
+<line x1="404" y1="103" x2="484" y2="103" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="446" y="96" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">yes</text>
+<rect x="488" y="86" width="294" height="34" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/><text x="635" y="107.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">Turn towards it</text>
+<line x1="214" y1="128" x2="214" y2="154" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="146" font-size="12" fill="#53626f" font-weight="700">no</text>
+<rect x="24" y="158" width="380" height="66" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/><text x="214" y="179.5" font-size="12.5" fill="#13202c" text-anchor="middle">Count the steps to walk: the least of what the leg calls</text><text x="214" y="195.5" font-size="12.5" fill="#13202c" text-anchor="middle">for, 85% of the distance that is clear ahead, 5 steps, and</text><text x="214" y="211.5" font-size="12.5" fill="#13202c" text-anchor="middle">as far as stays within 0.6 m of the leg</text>
+<line x1="214" y1="224" x2="214" y2="250" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<path d="M36 254 H392 L404 287 L392 320 H36 L24 287 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="291.5" font-size="12.5" fill="#13202c" text-anchor="middle">Is that at least one step?</text>
+<line x1="404" y1="287" x2="484" y2="287" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="446" y="280" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">yes</text>
+<rect x="488" y="254" width="294" height="66" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/><text x="635" y="275.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">Move forward that many steps. Name the</text><text x="635" y="291.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">next turn too, if the whole leg is walked</text><text x="635" y="307.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">and another follows</text>
+<line x1="214" y1="320" x2="214" y2="346" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="338" font-size="12" fill="#53626f" font-weight="700">no</text>
+<path d="M36 350 H392 L404 367 L392 384 H36 L24 367 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="371.5" font-size="12.5" fill="#13202c" text-anchor="middle">Is the leg too short to walk, with another after it?</text>
+<line x1="404" y1="367" x2="484" y2="367" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="446" y="360" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">yes</text>
+<rect x="488" y="350" width="294" height="34" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/><text x="635" y="371.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">The turn that follows</text>
+<line x1="214" y1="384" x2="214" y2="410" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="402" font-size="12" fill="#53626f" font-weight="700">no</text>
+<path d="M36 414 H392 L404 439 L392 464 H36 L24 439 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="435.5" font-size="12.5" fill="#13202c" text-anchor="middle">Does the leg end at the target, no more than one step</text><text x="214" y="451.5" font-size="12.5" fill="#13202c" text-anchor="middle">away?</text>
+<line x1="404" y1="439" x2="484" y2="439" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="446" y="432" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">yes</text>
+<rect x="488" y="422" width="294" height="34" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/><text x="635" y="443.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">Arrived</text>
+<line x1="214" y1="464" x2="214" y2="490" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="482" font-size="12" fill="#53626f" font-weight="700">no</text>
+<path d="M36 494 H392 L404 511 L392 528 H36 L24 511 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="515.5" font-size="12.5" fill="#13202c" text-anchor="middle">Does the leg lean 1° or more to one side?</text>
+<line x1="404" y1="511" x2="484" y2="511" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="446" y="504" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">yes</text>
+<rect x="488" y="494" width="294" height="34" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/><text x="635" y="515.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">Turn slightly to that side</text>
+<line x1="214" y1="528" x2="214" y2="554" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="546" font-size="12" fill="#53626f" font-weight="700">no</text>
+<rect x="24" y="558" width="380" height="34" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/><text x="214" y="579.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">Otherwise: blocked</text>
+</svg>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Wiring: the TF-Luna on four wires to the Raspberry Pi&#x27;s pins 2, 8, 10 and 6; the camera, microphone, earphone and ESP8266 on one cable each; the servo signals on the ESP8266&#x27;s D5 and D6, with power from a separate 5 V supply.">
+<title>Wiring: the TF-Luna on four wires to the Raspberry Pi&#x27;s pins 2, 8, 10 and 6; the camera, microphone, earphone and ESP8266 on one cable each; the servo signals on the ESP8266&#x27;s D5 and D6, with power from a separate 5 V supply.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="800" height="500" fill="#ffffff"/>
+<rect x="310" y="30" width="180" height="410" rx="4" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="400" y="58" font-size="15" fill="#13202c" text-anchor="middle" font-weight="700">Raspberry Pi 4</text>
+<circle cx="310" cy="100" r="4" fill="#13202c"/><text x="322" y="104" font-size="12" fill="#13202c">Pin 2: 5 V</text>
+<circle cx="310" cy="135" r="4" fill="#13202c"/><text x="322" y="139" font-size="12" fill="#13202c">Pin 8: TXD (GPIO14)</text>
+<circle cx="310" cy="170" r="4" fill="#13202c"/><text x="322" y="174" font-size="12" fill="#13202c">Pin 10: RXD (GPIO15)</text>
+<circle cx="310" cy="205" r="4" fill="#13202c"/><text x="322" y="209" font-size="12" fill="#13202c">Pin 6: GND</text>
+<circle cx="310" cy="290" r="4" fill="#13202c"/><text x="322" y="294" font-size="12" fill="#13202c">CSI connector</text>
+<circle cx="310" cy="340" r="4" fill="#13202c"/><text x="322" y="344" font-size="12" fill="#13202c">USB port</text>
+<circle cx="310" cy="390" r="4" fill="#13202c"/><text x="322" y="394" font-size="12" fill="#13202c">3.5 mm audio jack</text>
+<circle cx="490" cy="100" r="4" fill="#13202c"/><text x="478" y="104" font-size="12" fill="#13202c" text-anchor="end">USB port</text>
+<rect x="30" y="45" width="170" height="205" rx="4" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="115" y="72" font-size="14" fill="#13202c" text-anchor="middle" font-weight="700">TF-Luna LiDAR</text>
+<line x1="200" y1="100" x2="310" y2="100" fill="none" stroke="#c62828" stroke-width="2.5"/>
+<circle cx="200" cy="100" r="4" fill="#13202c"/><text x="188" y="104" font-size="12" fill="#13202c" text-anchor="end">1: +5 V</text>
+<text x="255" y="93" font-size="11" fill="#53626f" text-anchor="middle">5 V</text>
+<line x1="200" y1="135" x2="310" y2="135" fill="none" stroke="#1f5fae" stroke-width="2.5" stroke-dasharray="5 4"/>
+<circle cx="200" cy="135" r="4" fill="#13202c"/><text x="188" y="139" font-size="12" fill="#13202c" text-anchor="end">2: RXD</text>
+<text x="255" y="128" font-size="11" fill="#53626f" text-anchor="middle">not used</text>
+<line x1="200" y1="170" x2="306" y2="170" fill="none" stroke="#1f5fae" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+<circle cx="200" cy="170" r="4" fill="#13202c"/><text x="188" y="174" font-size="12" fill="#13202c" text-anchor="end">3: TXD</text>
+<text x="255" y="163" font-size="11" fill="#53626f" text-anchor="middle">readings</text>
+<line x1="200" y1="205" x2="310" y2="205" fill="none" stroke="#222222" stroke-width="2.5"/>
+<circle cx="200" cy="205" r="4" fill="#13202c"/><text x="188" y="209" font-size="12" fill="#13202c" text-anchor="end">4: GND</text>
+<text x="255" y="198" font-size="11" fill="#53626f" text-anchor="middle">ground</text>
+<text x="188" y="236" font-size="11" fill="#53626f" text-anchor="end">5, 6: not connected</text>
+<line x1="200" y1="290" x2="310" y2="290" fill="none" stroke="#8a97a3" stroke-width="4"/>
+<rect x="30" y="272" width="170" height="36" rx="4" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="115" y="295" font-size="13" fill="#13202c" text-anchor="middle" font-weight="600">Pi Camera</text>
+<text x="255" y="282" font-size="11" fill="#53626f" text-anchor="middle">ribbon cable</text>
+<line x1="200" y1="340" x2="310" y2="340" fill="none" stroke="#8a97a3" stroke-width="4"/>
+<rect x="30" y="322" width="170" height="36" rx="4" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="115" y="345" font-size="13" fill="#13202c" text-anchor="middle" font-weight="600">USB microphone</text>
+<text x="255" y="332" font-size="11" fill="#53626f" text-anchor="middle">USB</text>
+<line x1="200" y1="390" x2="310" y2="390" fill="none" stroke="#8a97a3" stroke-width="4"/>
+<rect x="30" y="372" width="170" height="36" rx="4" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="115" y="395" font-size="13" fill="#13202c" text-anchor="middle" font-weight="600">Earphone</text>
+<text x="255" y="382" font-size="11" fill="#53626f" text-anchor="middle">audio cable</text>
+<line x1="490" y1="100" x2="600" y2="100" fill="none" stroke="#8a97a3" stroke-width="4"/>
+<text x="545" y="91" font-size="11" fill="#53626f" text-anchor="middle">USB cable</text>
+<text x="545" y="118" font-size="11" fill="#53626f" text-anchor="middle">power and serial</text>
+<rect x="600" y="45" width="170" height="175" rx="4" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="685" y="72" font-size="14" fill="#13202c" text-anchor="middle" font-weight="700">ESP8266 (NodeMCU)</text>
+<circle cx="600" cy="100" r="4" fill="#13202c"/><text x="612" y="104" font-size="12" fill="#13202c">USB</text>
+<circle cx="640" cy="220" r="4" fill="#13202c"/>
+<text x="640" y="207" font-size="12" fill="#13202c" text-anchor="middle">D5</text>
+<circle cx="690" cy="220" r="4" fill="#13202c"/>
+<text x="690" y="207" font-size="12" fill="#13202c" text-anchor="middle">D6</text>
+<circle cx="740" cy="220" r="4" fill="#13202c"/>
+<text x="740" y="207" font-size="12" fill="#13202c" text-anchor="middle">GND</text>
+<path d="M640 220 V262 H615 V300" fill="none" stroke="#e07b00" stroke-width="2.5"/>
+<path d="M690 220 V275 H735 V300" fill="none" stroke="#e07b00" stroke-width="2.5"/>
+<text x="607" y="291" font-size="11" fill="#53626f" text-anchor="end">signal</text>
+<text x="743" y="291" font-size="11" fill="#53626f">signal</text>
+<line x1="740" y1="220" x2="740" y2="234" fill="none" stroke="#222222" stroke-width="2"/><line x1="731" y1="234" x2="749" y2="234" fill="none" stroke="#222222" stroke-width="2"/><line x1="734" y1="238" x2="746" y2="238" fill="none" stroke="#222222" stroke-width="2"/><line x1="737" y1="242" x2="743" y2="242" fill="none" stroke="#222222" stroke-width="2"/>
+<rect x="570" y="300" width="90" height="60" rx="4" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="615" y="335" font-size="13" fill="#13202c" text-anchor="middle" font-weight="600">Pan servo</text>
+<circle cx="615" cy="300" r="4" fill="#13202c"/>
+<circle cx="595" cy="360" r="4" fill="#13202c"/><circle cx="635" cy="360" r="4" fill="#13202c"/>
+<line x1="635" y1="360" x2="635" y2="372" fill="none" stroke="#222222" stroke-width="2"/><line x1="626" y1="372" x2="644" y2="372" fill="none" stroke="#222222" stroke-width="2"/><line x1="629" y1="376" x2="641" y2="376" fill="none" stroke="#222222" stroke-width="2"/><line x1="632" y1="380" x2="638" y2="380" fill="none" stroke="#222222" stroke-width="2"/>
+<rect x="690" y="300" width="90" height="60" rx="4" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="735" y="335" font-size="13" fill="#13202c" text-anchor="middle" font-weight="600">Tilt servo</text>
+<circle cx="735" cy="300" r="4" fill="#13202c"/>
+<circle cx="715" cy="360" r="4" fill="#13202c"/><circle cx="755" cy="360" r="4" fill="#13202c"/>
+<line x1="755" y1="360" x2="755" y2="372" fill="none" stroke="#222222" stroke-width="2"/><line x1="746" y1="372" x2="764" y2="372" fill="none" stroke="#222222" stroke-width="2"/><line x1="749" y1="376" x2="761" y2="376" fill="none" stroke="#222222" stroke-width="2"/><line x1="752" y1="380" x2="758" y2="380" fill="none" stroke="#222222" stroke-width="2"/>
+<path d="M595 360 V394 H715 V360 M655 394 V414" fill="none" stroke="#c62828" stroke-width="2.5"/>
+<text x="675" y="388" font-size="11" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">+5 V</text>
+<rect x="590" y="414" width="130" height="34" rx="4" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="655" y="436" font-size="13" fill="#13202c" text-anchor="middle" font-weight="600">5 V supply</text>
+<circle cx="655" cy="414" r="4" fill="#13202c"/>
+<path d="M720 431 H742 V438" fill="none" stroke="#222222" stroke-width="2"/><line x1="733" y1="438" x2="751" y2="438" fill="none" stroke="#222222" stroke-width="2"/><line x1="736" y1="442" x2="748" y2="442" fill="none" stroke="#222222" stroke-width="2"/><line x1="739" y1="446" x2="745" y2="446" fill="none" stroke="#222222" stroke-width="2"/>
+<text x="468" y="474" font-size="11.5" fill="#53626f">Servo power comes from its own 5 V supply, not from the</text><text x="468" y="489" font-size="11.5" fill="#53626f">ESP8266&#x27;s 3.3 V pin. All the ground points are joined.</text>
+</svg>

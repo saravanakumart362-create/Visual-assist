@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 276" width="820" height="276" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Three threads side by side. The listener thread puts recognised phrases on a queue that the main thread empties at the start of every step. The main thread puts sentences on a queue that the speaker thread speaks one at a time.">
+<title>Three threads side by side. The listener thread puts recognised phrases on a queue that the main thread empties at the start of every step. The main thread puts sentences on a queue that the speaker thread speaks one at a time.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="820" height="276" fill="#ffffff"/>
+<rect x="20" y="52" width="196" height="150" rx="6" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="118" y="78" font-size="14.5" fill="#13202c" text-anchor="middle" font-weight="700">Listener thread</text>
+<text x="118" y="106" font-size="12.5" fill="#13202c" text-anchor="middle">Listens on the</text><text x="118" y="123" font-size="12.5" fill="#13202c" text-anchor="middle">microphone and turns</text><text x="118" y="140" font-size="12.5" fill="#13202c" text-anchor="middle">speech into text</text>
+<rect x="312" y="52" width="196" height="150" rx="6" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="410" y="78" font-size="14.5" fill="#13202c" text-anchor="middle" font-weight="700">Main thread</text>
+<text x="410" y="106" font-size="12.5" fill="#13202c" text-anchor="middle">Assistant.step():</text><text x="410" y="123" font-size="12.5" fill="#13202c" text-anchor="middle">commands, camera,</text><text x="410" y="140" font-size="12.5" fill="#13202c" text-anchor="middle">detector, LiDAR,</text><text x="410" y="157" font-size="12.5" fill="#13202c" text-anchor="middle">servos, decisions</text>
+<rect x="604" y="52" width="196" height="150" rx="6" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="702" y="78" font-size="14.5" fill="#13202c" text-anchor="middle" font-weight="700">Speaker thread</text>
+<text x="702" y="106" font-size="12.5" fill="#13202c" text-anchor="middle">Speaks one</text><text x="702" y="123" font-size="12.5" fill="#13202c" text-anchor="middle">sentence at a time</text>
+<rect x="231" y="112" width="15" height="30" rx="2" fill="#ffffff" stroke="#13202c" stroke-width="1.25"/>
+<rect x="248" y="112" width="15" height="30" rx="2" fill="#ffffff" stroke="#13202c" stroke-width="1.25"/>
+<rect x="265" y="112" width="15" height="30" rx="2" fill="#ffffff" stroke="#13202c" stroke-width="1.25"/>
+<rect x="282" y="112" width="15" height="30" rx="2" fill="#ffffff" stroke="#13202c" stroke-width="1.25"/>
+<text x="264" y="160" font-size="11.5" fill="#53626f" text-anchor="middle">queue of</text><text x="264" y="174" font-size="11.5" fill="#53626f" text-anchor="middle">phrases</text>
+<rect x="523" y="112" width="15" height="30" rx="2" fill="#ffffff" stroke="#13202c" stroke-width="1.25"/>
+<rect x="540" y="112" width="15" height="30" rx="2" fill="#ffffff" stroke="#13202c" stroke-width="1.25"/>
+<rect x="557" y="112" width="15" height="30" rx="2" fill="#ffffff" stroke="#13202c" stroke-width="1.25"/>
+<rect x="574" y="112" width="15" height="30" rx="2" fill="#ffffff" stroke="#13202c" stroke-width="1.25"/>
+<text x="556" y="160" font-size="11.5" fill="#53626f" text-anchor="middle">queue of</text><text x="556" y="174" font-size="11.5" fill="#53626f" text-anchor="middle">sentences</text>
+<line x1="216" y1="127" x2="229" y2="127" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="299" y1="127" x2="310" y2="127" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="508" y1="127" x2="521" y2="127" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="591" y1="127" x2="602" y2="127" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<path d="M410 52 C410 14, 702 14, 702 48" fill="none" stroke="#cf2e45" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-lidar)"/>
+<text x="556" y="20" font-size="12" fill="#cf2e45" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">urgent: empty the queue and cut off the sentence being spoken</text>
+<path d="M702 202 C702 262, 118 262, 118 206" fill="none" stroke="#53626f" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-muted)"/>
+<text x="410" y="252" font-size="12" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">while a sentence is being spoken, wait before listening</text>
+</svg>

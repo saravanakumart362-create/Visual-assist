@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 196" width="700" height="196" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="The nine bytes of a TF-Luna frame for a reading of 2.26 m: 59 59 E2 00 B0 04 C8 08 18.">
+<title>The nine bytes of a TF-Luna frame for a reading of 2.26 m: 59 59 E2 00 B0 04 C8 08 18.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="700" height="196" fill="#ffffff"/>
+<rect x="44" y="46" width="136" height="48" rx="0" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<path d="M48 102 V109 H176 V102" fill="none" stroke="#53626f" stroke-width="1.5"/>
+<text x="112" y="130" font-size="13" fill="#13202c" text-anchor="middle" font-weight="700">Header</text>
+<text x="112" y="148" font-size="12" fill="#53626f" text-anchor="middle">always 59 59</text>
+<rect x="180" y="46" width="136" height="48" rx="0" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/>
+<path d="M184 102 V109 H312 V102" fill="none" stroke="#53626f" stroke-width="1.5"/>
+<text x="248" y="130" font-size="13" fill="#13202c" text-anchor="middle" font-weight="700">Distance, low byte first</text>
+<text x="248" y="148" font-size="12" fill="#53626f" text-anchor="middle">0x00E2 = 226 cm</text>
+<rect x="316" y="46" width="136" height="48" rx="0" fill="#cfe6e3" stroke="#13202c" stroke-width="1.5"/>
+<path d="M320 102 V109 H448 V102" fill="none" stroke="#53626f" stroke-width="1.5"/>
+<text x="384" y="130" font-size="13" fill="#13202c" text-anchor="middle" font-weight="700">Signal strength</text>
+<text x="384" y="148" font-size="12" fill="#53626f" text-anchor="middle">0x04B0 = 1200</text>
+<rect x="452" y="46" width="136" height="48" rx="0" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<path d="M456 102 V109 H584 V102" fill="none" stroke="#53626f" stroke-width="1.5"/>
+<text x="520" y="130" font-size="13" fill="#13202c" text-anchor="middle" font-weight="700">Temperature</text>
+<text x="520" y="148" font-size="12" fill="#53626f" text-anchor="middle">not used</text>
+<rect x="588" y="46" width="68" height="48" rx="0" fill="#f6cfd5" stroke="#13202c" stroke-width="1.5"/>
+<path d="M592 102 V109 H652 V102" fill="none" stroke="#53626f" stroke-width="1.5"/>
+<text x="622" y="130" font-size="13" fill="#13202c" text-anchor="middle" font-weight="700">Checksum</text>
+<text x="622" y="148" font-size="12" fill="#53626f" text-anchor="middle">low byte of the sum</text><text x="622" y="164" font-size="12" fill="#53626f" text-anchor="middle">of bytes 1 to 8</text>
+<text x="78" y="36" font-size="11" fill="#53626f" text-anchor="middle">1</text>
+<text x="78" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">59</text>
+<line x1="112" y1="46" x2="112" y2="94" fill="none" stroke="#13202c" stroke-width="0.75"/>
+<text x="146" y="36" font-size="11" fill="#53626f" text-anchor="middle">2</text>
+<text x="146" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">59</text>
+<line x1="180" y1="46" x2="180" y2="94" fill="none" stroke="#13202c" stroke-width="0.75"/>
+<text x="214" y="36" font-size="11" fill="#53626f" text-anchor="middle">3</text>
+<text x="214" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">E2</text>
+<line x1="248" y1="46" x2="248" y2="94" fill="none" stroke="#13202c" stroke-width="0.75"/>
+<text x="282" y="36" font-size="11" fill="#53626f" text-anchor="middle">4</text>
+<text x="282" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">00</text>
+<line x1="316" y1="46" x2="316" y2="94" fill="none" stroke="#13202c" stroke-width="0.75"/>
+<text x="350" y="36" font-size="11" fill="#53626f" text-anchor="middle">5</text>
+<text x="350" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">B0</text>
+<line x1="384" y1="46" x2="384" y2="94" fill="none" stroke="#13202c" stroke-width="0.75"/>
+<text x="418" y="36" font-size="11" fill="#53626f" text-anchor="middle">6</text>
+<text x="418" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">04</text>
+<line x1="452" y1="46" x2="452" y2="94" fill="none" stroke="#13202c" stroke-width="0.75"/>
+<text x="486" y="36" font-size="11" fill="#53626f" text-anchor="middle">7</text>
+<text x="486" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">C8</text>
+<line x1="520" y1="46" x2="520" y2="94" fill="none" stroke="#13202c" stroke-width="0.75"/>
+<text x="554" y="36" font-size="11" fill="#53626f" text-anchor="middle">8</text>
+<text x="554" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">08</text>
+<line x1="588" y1="46" x2="588" y2="94" fill="none" stroke="#13202c" stroke-width="0.75"/>
+<text x="622" y="36" font-size="11" fill="#53626f" text-anchor="middle">9</text>
+<text x="622" y="77" font-size="20" fill="#13202c" text-anchor="middle" font-weight="700" font-family="Consolas, Menlo, monospace">18</text>
+<text x="36" y="36" font-size="11" fill="#53626f" text-anchor="end">byte</text>
+</svg>

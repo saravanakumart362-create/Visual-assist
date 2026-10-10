@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 304" width="820" height="304" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Seen from above. Left: the 5 camera views of a scan, from 60° left to 60° right. Right: the 25 LiDAR readings of a sweep, from 72° left to 72° right.">
+<title>Seen from above. Left: the 5 camera views of a scan, from 60° left to 60° right. Right: the 25 LiDAR readings of a sweep, from 72° left to 72° right.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="820" height="304" fill="#ffffff"/>
+<text x="205" y="28" font-size="15" fill="#13202c" text-anchor="middle" font-weight="700">Scan: 5 pictures, each 62.2° wide</text>
+<path d="M205 262 L61 264.8 A144 144 0 0 1 135.4 135.9 Z" fill="#0c7c74" opacity="0.13"/>
+<path d="M205 262 L78.9 192.4 A144 144 0 0 1 207.8 118 Z" fill="#0c7c74" opacity="0.13"/>
+<path d="M205 262 L130.6 138.7 A144 144 0 0 1 279.4 138.7 Z" fill="#0c7c74" opacity="0.13"/>
+<path d="M205 262 L202.2 118 A144 144 0 0 1 331.1 192.4 Z" fill="#0c7c74" opacity="0.13"/>
+<path d="M205 262 L274.6 135.9 A144 144 0 0 1 349 264.8 Z" fill="#0c7c74" opacity="0.13"/>
+<path d="M205 262 L61 264.8 A144 144 0 0 1 135.4 135.9 Z" fill="none" stroke="#0c7c74" stroke-width="0.75"/>
+<line x1="205" y1="262" x2="80.3" y2="190" fill="none" stroke="#0c7c74" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="68.9" y="175.4" font-size="12" fill="#13202c" text-anchor="end" font-weight="700">60° left</text>
+<text x="68.9" y="190.4" font-size="11.5" fill="#53626f" text-anchor="end" font-family="Consolas, Menlo, monospace">PAN 150</text>
+<path d="M205 262 L78.9 192.4 A144 144 0 0 1 207.8 118 Z" fill="none" stroke="#0c7c74" stroke-width="0.75"/>
+<line x1="205" y1="262" x2="133" y2="137.3" fill="none" stroke="#0c7c74" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="126.4" y="117.9" font-size="12" fill="#13202c" text-anchor="end" font-weight="700">30° left</text>
+<text x="126.4" y="132.9" font-size="11.5" fill="#53626f" text-anchor="end" font-family="Consolas, Menlo, monospace">PAN 120</text>
+<path d="M205 262 L130.6 138.7 A144 144 0 0 1 279.4 138.7 Z" fill="none" stroke="#0c7c74" stroke-width="0.75"/>
+<line x1="205" y1="262" x2="205" y2="118" fill="none" stroke="#0c7c74" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="205" y="96.8" font-size="12" fill="#13202c" text-anchor="middle" font-weight="700">ahead</text>
+<text x="205" y="111.8" font-size="11.5" fill="#53626f" text-anchor="middle" font-family="Consolas, Menlo, monospace">PAN 90</text>
+<path d="M205 262 L202.2 118 A144 144 0 0 1 331.1 192.4 Z" fill="none" stroke="#0c7c74" stroke-width="0.75"/>
+<line x1="205" y1="262" x2="277" y2="137.3" fill="none" stroke="#0c7c74" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="283.6" y="117.9" font-size="12" fill="#13202c" font-weight="700">30° right</text>
+<text x="283.6" y="132.9" font-size="11.5" fill="#53626f" font-family="Consolas, Menlo, monospace">PAN 60</text>
+<path d="M205 262 L274.6 135.9 A144 144 0 0 1 349 264.8 Z" fill="none" stroke="#0c7c74" stroke-width="0.75"/>
+<line x1="205" y1="262" x2="329.7" y2="190" fill="none" stroke="#0c7c74" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="341.1" y="175.4" font-size="12" fill="#13202c" font-weight="700">60° right</text>
+<text x="341.1" y="190.4" font-size="11.5" fill="#53626f" font-family="Consolas, Menlo, monospace">PAN 30</text>
+<circle cx="205" cy="262" r="6" fill="#13202c"/>
+<text x="205" y="290" font-size="12" fill="#53626f" text-anchor="middle">Together they cover 91° to each side.</text>
+<text x="600" y="28" font-size="15" fill="#13202c" text-anchor="middle" font-weight="700">Sweep: 25 LiDAR readings, 6° apart</text>
+<line x1="463" y1="217.5" x2="417.4" y2="202.7" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="463" y2="217.5" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="468.4" y1="203.4" x2="424.6" y2="183.9" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="468.4" y2="203.4" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="475.3" y1="190" x2="433.7" y2="166" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="475.3" y2="190" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="483.5" y1="177.4" x2="444.7" y2="149.1" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="483.5" y2="177.4" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="493" y1="165.6" x2="457.3" y2="133.5" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="493" y2="165.6" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="503.6" y1="155" x2="471.5" y2="119.3" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="503.6" y2="155" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="515.4" y1="145.5" x2="487.1" y2="106.7" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="515.4" y2="145.5" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="528" y1="137.3" x2="504" y2="95.7" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="528" y2="137.3" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="541.4" y1="130.4" x2="521.9" y2="86.6" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="541.4" y2="130.4" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="555.5" y1="125" x2="540.7" y2="79.4" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="555.5" y2="125" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="570.1" y1="121.1" x2="560.1" y2="74.2" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="570.1" y2="121.1" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="584.9" y1="118.8" x2="579.9" y2="71.1" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="584.9" y2="118.8" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="600" y1="118" x2="600" y2="70" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="600" y2="118" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="615.1" y1="118.8" x2="620.1" y2="71.1" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="615.1" y2="118.8" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="629.9" y1="121.1" x2="639.9" y2="74.2" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="629.9" y2="121.1" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="644.5" y1="125" x2="659.3" y2="79.4" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="644.5" y2="125" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="658.6" y1="130.4" x2="678.1" y2="86.6" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="658.6" y2="130.4" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="672" y1="137.3" x2="696" y2="95.7" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="672" y2="137.3" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="684.6" y1="145.5" x2="712.9" y2="106.7" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="684.6" y2="145.5" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="696.4" y1="155" x2="728.5" y2="119.3" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="696.4" y2="155" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="707" y1="165.6" x2="742.7" y2="133.5" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="707" y2="165.6" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="716.5" y1="177.4" x2="755.3" y2="149.1" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="716.5" y2="177.4" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="724.7" y1="190" x2="766.3" y2="166" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="724.7" y2="190" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="731.6" y1="203.4" x2="775.4" y2="183.9" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="731.6" y2="203.4" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<line x1="737" y1="217.5" x2="782.6" y2="202.7" fill="none" stroke="#c5ced6" stroke-width="1"/>
+<line x1="600" y1="262" x2="737" y2="217.5" fill="none" stroke="#cf2e45" stroke-width="1.25"/>
+<path d="M459.1 232.1 A144 144 0 0 1 740.9 232.1" fill="none" stroke="#13202c" stroke-width="1" stroke-dasharray="4 3"/>
+<path d="M412.2 222.1 A192 192 0 0 1 787.8 222.1" fill="none" stroke="#53626f" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="600" y="113" font-size="11.5" fill="#13202c" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">6 m: used by the planner</text>
+<text x="600" y="65" font-size="11.5" fill="#13202c" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">8 m: the sensor&#x27;s limit</text>
+<text x="452.8" y="230.2" font-size="12" fill="#13202c" text-anchor="end" font-weight="700" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">72° left</text>
+<text x="747.2" y="230.2" font-size="12" fill="#13202c" font-weight="700" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">72° right</text>
+<circle cx="600" cy="262" r="6" fill="#13202c"/>
+<text x="600" y="290" font-size="12" fill="#53626f" text-anchor="middle">No pictures are taken during a sweep.</text>
+</svg>

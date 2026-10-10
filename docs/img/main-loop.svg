@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 554" width="800" height="554" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="One pass of the main loop, from the top: act on commands; run a guidance cycle if one is due; otherwise take a picture, detect, read the LiDAR, track movement, then either watch the guidance or warn of obstacles, and lastly name the people in view.">
+<title>One pass of the main loop, from the top: act on commands; run a guidance cycle if one is due; otherwise take a picture, detect, read the LiDAR, track movement, then either watch the guidance or warn of obstacles, and lastly name the people in view.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="800" height="554" fill="#ffffff"/>
+<rect x="24" y="14" width="380" height="50" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/><text x="214" y="35.5" font-size="12.5" fill="#13202c" text-anchor="middle">Act on every phrase waiting in the queue of recognised</text><text x="214" y="51.5" font-size="12.5" fill="#13202c" text-anchor="middle">speech</text>
+<line x1="214" y1="64" x2="214" y2="90" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<path d="M36 94 H392 L404 119 L392 144 H36 L24 119 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="115.5" font-size="12.5" fill="#13202c" text-anchor="middle">Is the wearer being guided along a planned route, and</text><text x="214" y="131.5" font-size="12.5" fill="#13202c" text-anchor="middle">is the time allowed for the last instruction up?</text>
+<line x1="404" y1="119" x2="484" y2="119" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="446" y="112" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">yes</text>
+<rect x="488" y="94" width="294" height="50" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/><text x="635" y="115.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">Run one guidance cycle (section 8). The</text><text x="635" y="131.5" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">step ends here</text>
+<line x1="214" y1="144" x2="214" y2="170" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="162" font-size="12" fill="#53626f" font-weight="700">no</text>
+<path d="M36 174 H392 L404 191 L392 208 H36 L24 191 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="195.5" font-size="12.5" fill="#13202c" text-anchor="middle">Read a picture from the camera. Was there one?</text>
+<line x1="404" y1="191" x2="484" y2="191" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="446" y="184" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">no</text>
+<rect x="488" y="174" width="294" height="34" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/><text x="635" y="195.5" font-size="12.5" fill="#53626f" text-anchor="middle">Wait 0.1 s. The step ends here</text>
+<line x1="214" y1="208" x2="214" y2="234" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="226" font-size="12" fill="#53626f" font-weight="700">yes</text>
+<rect x="24" y="238" width="380" height="34" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/><text x="214" y="259.5" font-size="12.5" fill="#13202c" text-anchor="middle">Run the detector on the picture. Read the LiDAR</text>
+<line x1="214" y1="272" x2="214" y2="298" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<rect x="24" y="302" width="380" height="34" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/><text x="214" y="323.5" font-size="12.5" fill="#13202c" text-anchor="middle">Update the walking speed. Notice a pause. Notice a crowd</text>
+<line x1="214" y1="336" x2="214" y2="362" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<path d="M36 366 H392 L404 421 L392 476 H36 L24 421 Z" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/><text x="214" y="425.5" font-size="12.5" fill="#13202c" text-anchor="middle">Is the wearer being guided?</text>
+<path d="M404 421 H434 V391 H484" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="458" y="384" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">yes</text>
+<rect x="488" y="366" width="294" height="50" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/><text x="635" y="387.5" font-size="12.5" fill="#13202c" text-anchor="middle">Check for arrival and for danger. With no</text><text x="635" y="403.5" font-size="12.5" fill="#13202c" text-anchor="middle">route planner, steer by the camera</text>
+<path d="M404 421 H434 V451 H484" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="458" y="444" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">no</text>
+<rect x="488" y="426" width="294" height="50" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/><text x="635" y="447.5" font-size="12.5" fill="#13202c" text-anchor="middle">Warn of an obstacle ahead. Describe the</text><text x="635" y="463.5" font-size="12.5" fill="#13202c" text-anchor="middle">view if the wearer has just paused</text>
+<line x1="214" y1="476" x2="214" y2="502" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="224" y="494" font-size="12" fill="#53626f" font-weight="700">then</text>
+<rect x="24" y="506" width="380" height="34" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/><text x="214" y="527.5" font-size="12.5" fill="#13202c" text-anchor="middle">Every 3 pictures: name the registered people in view</text>
+</svg>

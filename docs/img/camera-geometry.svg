@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" width="800" height="340" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Left: a pixel at column 480 of 640 lies 16.8 degrees right of the camera&#x27;s axis. Right: a 2.0 m door that is 240 pixels tall in a 480-pixel picture is 4.4 m away.">
+<title>Left: a pixel at column 480 of 640 lies 16.8 degrees right of the camera&#x27;s axis. Right: a 2.0 m door that is 240 pixels tall in a 480-pixel picture is 4.4 m away.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="800" height="340" fill="#ffffff"/>
+<text x="20" y="30" font-size="15" fill="#13202c" font-weight="700">Direction from a pixel</text>
+<text x="20" y="49" font-size="12" fill="#53626f">seen from above</text>
+<path d="M195 300 L71.9 96 L318.1 96 Z" fill="#eef1f4"/>
+<line x1="195" y1="300" x2="195" y2="96" fill="none" stroke="#53626f" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="71.9" y1="96" x2="318.1" y2="96" fill="none" stroke="#13202c" stroke-width="3"/>
+<line x1="71.9" y1="91" x2="71.9" y2="101" fill="none" stroke="#13202c" stroke-width="1.5"/>
+<text x="71.9" y="85" font-size="12" fill="#53626f" text-anchor="middle">0</text>
+<line x1="195" y1="91" x2="195" y2="101" fill="none" stroke="#13202c" stroke-width="1.5"/>
+<text x="195" y="85" font-size="12" fill="#53626f" text-anchor="middle">320</text>
+<line x1="318.1" y1="91" x2="318.1" y2="101" fill="none" stroke="#13202c" stroke-width="1.5"/>
+<text x="318.1" y="85" font-size="12" fill="#53626f" text-anchor="middle">640</text>
+<text x="195" y="64" font-size="12" fill="#13202c" text-anchor="middle">the picture: 640 pixels wide</text>
+<line x1="195" y1="300" x2="256.5" y2="96" fill="none" stroke="#0c7c74" stroke-width="2.5"/>
+<circle cx="256.5" cy="96" r="5" fill="#0c7c74"/>
+<text x="256.5" y="118" font-size="12" fill="#0c7c74" text-anchor="middle" font-weight="700" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">cx = 480</text>
+<path d="M195 222 A78 78 0 0 1 217.5 225.3" fill="none" stroke="#0c7c74" stroke-width="1.5"/>
+<text x="233" y="228" font-size="13" fill="#0c7c74" font-weight="700">16.8°</text>
+<path d="M176.4 269.2 A36 36 0 0 1 213.6 269.2" fill="none" stroke="#53626f" stroke-width="1.5"/>
+<circle cx="195" cy="300" r="6" fill="#13202c"/>
+<text x="195" y="324" font-size="12" fill="#53626f" text-anchor="middle">camera, field of view 62.2°</text>
+<text x="420" y="30" font-size="15" fill="#13202c" font-weight="700">Distance from apparent size</text>
+<text x="420" y="49" font-size="12" fill="#53626f">seen from the side</text>
+<path d="M440 178 L742 109.5 L742 246.5 Z" fill="#eef1f4"/>
+<line x1="440" y1="178" x2="742" y2="178" fill="none" stroke="#53626f" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="440" y1="178" x2="742" y2="109.5" fill="none" stroke="#0c7c74" stroke-width="1.5"/>
+<line x1="440" y1="178" x2="742" y2="246.5" fill="none" stroke="#0c7c74" stroke-width="1.5"/>
+<line x1="512" y1="145.3" x2="512" y2="210.7" fill="none" stroke="#13202c" stroke-width="3"/>
+<line x1="512" y1="161.7" x2="512" y2="194.3" fill="none" stroke="#0c7c74" stroke-width="6"/>
+<text x="512" y="119.3" font-size="12" fill="#13202c" text-anchor="middle">the picture:</text><text x="512" y="134.3" font-size="12" fill="#13202c" text-anchor="middle">480 px tall</text>
+<text x="512" y="228.7" font-size="12" fill="#0c7c74" text-anchor="middle" font-weight="700">door: 240 px</text>
+<rect x="738" y="109.5" width="8" height="137" rx="0" fill="#f5b800" stroke="#13202c" stroke-width="1"/>
+<text x="742" y="99.5" font-size="12" fill="#13202c" text-anchor="middle">door, 2.0 m tall</text>
+<circle cx="440" cy="178" r="6" fill="#13202c"/>
+<text x="440" y="164" font-size="12" fill="#53626f" text-anchor="middle">camera</text>
+<line x1="440" y1="274" x2="512" y2="274" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)" marker-start="url(#arrow-ink)"/>
+<text x="476" y="291" font-size="12.5" fill="#13202c" text-anchor="middle">f = 529 px</text>
+<line x1="440" y1="304" x2="742" y2="304" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)" marker-start="url(#arrow-ink)"/>
+<text x="591" y="321" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">d = 2.0 m × 529 / 240 = 4.4 m</text>
+</svg>

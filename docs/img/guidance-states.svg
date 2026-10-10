@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 264" width="820" height="264" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Four states. Not guiding leads to finding the target when the wearer asks to be guided. Once found, the assistant alternates between planning the next action and waiting for the wearer to act, until arrival, loss of the target, no way through, or Stop.">
+<title>Four states. Not guiding leads to finding the target when the wearer asks to be guided. Once found, the assistant alternates between planning the next action and waiting for the wearer to act, until arrival, loss of the target, no way through, or Stop.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="820" height="264" fill="#ffffff"/>
+<rect x="44" y="34" width="160" height="50" rx="10" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="124" y="64" font-size="13.5" fill="#13202c" text-anchor="middle" font-weight="700">Not guiding</text>
+<rect x="556" y="34" width="190" height="50" rx="10" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="651" y="64" font-size="13.5" fill="#13202c" text-anchor="middle" font-weight="700">Finding the target</text>
+<rect x="540" y="184" width="222" height="50" rx="10" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="651" y="214" font-size="13.5" fill="#13202c" text-anchor="middle" font-weight="700">Planning the next action</text>
+<rect x="44" y="184" width="236" height="50" rx="10" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="162" y="214" font-size="13.5" fill="#13202c" text-anchor="middle" font-weight="700">Waiting for the wearer to act</text>
+<circle cx="16" cy="59" r="6" fill="#13202c"/>
+<line x1="22" y1="59" x2="40" y2="59" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="204" y1="50" x2="552" y2="50" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="380" y="42" font-size="12" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">“Guide me to the door”</text>
+<line x1="556" y1="68" x2="208" y2="68" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="380" y="86" font-size="12" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">not found, or already within reach</text>
+<line x1="651" y1="84" x2="651" y2="180" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="661" y="136" font-size="12" fill="#53626f" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">found and measured</text>
+<line x1="540" y1="200" x2="284" y2="200" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="412" y="192" font-size="12" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">the action is spoken</text>
+<line x1="280" y1="218" x2="536" y2="218" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="412" y="252" font-size="12" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">time is up, the wearer paused, or a warning was given</text>
+<line x1="100" y1="184" x2="100" y2="88" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="110" y="158" font-size="12" fill="#53626f" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">arrived, or the wearer said “Stop”</text>
+<path d="M600 184 V122 H172 V88" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="386" y="115" font-size="12" fill="#53626f" text-anchor="middle" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">arrived, target lost, or no way found</text>
+</svg>

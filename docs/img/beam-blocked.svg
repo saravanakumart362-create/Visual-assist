@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 268" width="750" height="268" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Seen from above: the LiDAR beam aimed at the door stops at a chair 2.20 m away, while the door&#x27;s size in the picture puts it about 5 m away.">
+<title>Seen from above: the LiDAR beam aimed at the door stops at a chair 2.20 m away, while the door&#x27;s size in the picture puts it about 5 m away.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="750" height="268" fill="#ffffff"/>
+<path d="M70 100 L600 52.3 L600 147.7 Z" fill="#eef1f4"/>
+<line x1="70" y1="100" x2="600" y2="52.3" fill="none" stroke="#0c7c74" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="70" y1="100" x2="600" y2="147.7" fill="none" stroke="#0c7c74" stroke-width="1.5" stroke-dasharray="5 4"/>
+<circle cx="329.7" cy="100" r="26.5" fill="#44556a"/>
+<text x="329.7" y="63.5" font-size="13" fill="#13202c" text-anchor="middle" font-weight="700">chair</text>
+<rect x="600" y="52.3" width="9" height="95.4" rx="0" fill="#f5b800" stroke="#13202c" stroke-width="1"/>
+<text x="604" y="42.3" font-size="13" fill="#13202c" text-anchor="middle" font-weight="700">door</text>
+<line x1="70" y1="100" x2="303.2" y2="100" fill="none" stroke="#cf2e45" stroke-width="3"/>
+<circle cx="303.2" cy="100" r="5" fill="#cf2e45"/>
+<circle cx="70" cy="100" r="7" fill="#0c7c74"/>
+<text x="70" y="126" font-size="12" fill="#53626f" text-anchor="middle">wearer</text>
+<line x1="70" y1="180" x2="303.2" y2="180" fill="none" stroke="#cf2e45" stroke-width="1.5"/>
+<line x1="70" y1="175" x2="70" y2="185" fill="none" stroke="#cf2e45" stroke-width="1.5"/>
+<line x1="303.2" y1="175" x2="303.2" y2="185" fill="none" stroke="#cf2e45" stroke-width="1.5"/>
+<text x="76" y="173" font-size="12.5" fill="#cf2e45" font-weight="700">LiDAR: the beam stops at the chair, 2.20 m</text>
+<line x1="70" y1="214" x2="600" y2="214" fill="none" stroke="#0c7c74" stroke-width="1.5"/>
+<line x1="70" y1="209" x2="70" y2="219" fill="none" stroke="#0c7c74" stroke-width="1.5"/>
+<line x1="600" y1="209" x2="600" y2="219" fill="none" stroke="#0c7c74" stroke-width="1.5"/>
+<text x="76" y="207" font-size="12.5" fill="#0c7c74" font-weight="700">Camera: by its size in the picture, the door is about 5 m away</text>
+<text x="70" y="250" font-size="12.5" fill="#13202c">5 m is 2.3 times 2.20 m, more than the 1.5 allowed: the beam is on something else, so the camera&#x27;s estimate is used.</text>
+</svg>

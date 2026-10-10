@@ -1,5 +1,9 @@
 # Visual Assist — Navigating the Unseen
 
+**Try the live demo: <https://saravanakumart362-create.github.io/Visual-assist/>**
+It runs in your browser with nothing to install: a simulated room, your own
+camera, and a walkthrough of the hardware.
+
 A deep learning based aid for the blind. A Raspberry Pi 4 watches the room
 through a camera, recognises objects with YOLOv5, measures how far away they
 are with a LiDAR, recognises familiar faces and banknotes, and talks to the
@@ -8,6 +12,12 @@ user through an earphone. The user talks back: *"Where is the door?"*,
 
 This repository is the software for the B.Tech project report of the same
 name (Government College of Engineering Kannur, April 2025).
+
+**Full technical documentation:** [docs/TECHNICAL.md](docs/TECHNICAL.md)
+covers the architecture, the wire protocols, the guidance algorithms, every
+setting, the models, the demo page and the tests. The same document as a
+PDF to download:
+[Visual-Assist-Technical-Documentation.pdf](docs/Visual-Assist-Technical-Documentation.pdf).
 
 ## What it does
 
@@ -398,6 +408,7 @@ into anything, and that at least 9 trips in 10 reach the door.
 ```
 main.py                      command line entry point
 config.yaml                  all settings
+docs/TECHNICAL.md            full technical documentation
 index.html, demo/            the demo page (see "Demo page")
 visual_assist/
   assistant.py               main loop, voice commands, guidance

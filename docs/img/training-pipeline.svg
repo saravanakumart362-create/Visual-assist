@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 430" width="830" height="430" role="img" font-family="Segoe UI, Helvetica, Arial, sans-serif" aria-label="Two photo collections become the door dataset and, with a third, the banknote dataset. Training turns each into a model file. Those two and a ready-made model are loaded on the device, and converted to ONNX for the demo page.">
+<title>Two photo collections become the door dataset and, with a third, the banknote dataset. Training turns each into a model file. Those two and a ready-made model are loaded on the device, and converted to ONNX for the demo page.</title>
+<defs><marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#13202c"/></marker><marker id="arrow-path" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0c7c74"/></marker><marker id="arrow-lidar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#cf2e45"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#53626f"/></marker><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#1f5fae"/></marker></defs>
+<rect width="830" height="430" fill="#ffffff"/>
+<text x="20" y="26" font-size="13" fill="#53626f" font-weight="700">Photo collections</text>
+<text x="290" y="26" font-size="13" fill="#53626f" font-weight="700">Datasets</text>
+<text x="604" y="26" font-size="13" fill="#53626f" font-weight="700">Trained models</text>
+<rect x="20" y="44" width="170" height="32" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="105" y="65" font-size="12.5" fill="#13202c" text-anchor="middle">DoorDetect</text>
+<rect x="20" y="104" width="170" height="32" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="105" y="125" font-size="12.5" fill="#13202c" text-anchor="middle">Open Images</text>
+<rect x="20" y="164" width="170" height="32" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="105" y="185" font-size="12.5" fill="#13202c" text-anchor="middle">Mendeley banknotes</text>
+<rect x="290" y="58" width="170" height="48" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="375" y="79" font-size="12.5" fill="#13202c" text-anchor="middle">Doors</text><text x="375" y="95" font-size="12.5" fill="#13202c" text-anchor="middle">1,715 + 229 photos</text>
+<rect x="290" y="150" width="170" height="48" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="375" y="171" font-size="12.5" fill="#13202c" text-anchor="middle">Banknotes</text><text x="375" y="187" font-size="12.5" fill="#13202c" text-anchor="middle">2,575 + 625 photos</text>
+<rect x="604" y="58" width="196" height="32" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/>
+<text x="702" y="79" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">weights/doors.pt</text>
+<rect x="604" y="150" width="196" height="32" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/>
+<text x="702" y="171" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">weights/currency.pt</text>
+<rect x="604" y="226" width="196" height="48" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/>
+<text x="702" y="247" font-size="12.5" fill="#13202c" text-anchor="middle">weights/yolov5nu.pt</text><text x="702" y="263" font-size="12.5" fill="#13202c" text-anchor="middle">ready-made: 80 objects</text>
+<line x1="190" y1="60" x2="286" y2="74" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="190" y1="120" x2="286" y2="90" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="198" y="50" font-size="11.5" fill="#53626f" font-family="Consolas, Menlo, monospace" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">prepare_doors.py</text>
+<line x1="190" y1="126" x2="286" y2="166" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="190" y1="180" x2="286" y2="182" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="198" y="214" font-size="11.5" fill="#53626f" font-family="Consolas, Menlo, monospace" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">prepare_currency.py</text>
+<line x1="375" y1="106" x2="375" y2="146" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="383" y="130" font-size="11.5" fill="#53626f" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">indoor photos, for “no note”</text>
+<line x1="460" y1="82" x2="600" y2="74" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="532" y="71" font-size="11.5" fill="#53626f" text-anchor="middle" font-family="Consolas, Menlo, monospace" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">train.py doors</text>
+<line x1="460" y1="174" x2="600" y2="166" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="532" y="163" font-size="11.5" fill="#53626f" text-anchor="middle" font-family="Consolas, Menlo, monospace" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">train.py currency</text>
+<path d="M800 74 H812 V352 M800 166 H812 M800 250 H812" fill="none" stroke="#13202c" stroke-width="1.5"/>
+<rect x="520" y="300" width="250" height="48" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="645" y="321" font-size="12.5" fill="#13202c" text-anchor="middle">On the device:</text><text x="645" y="337" font-size="12.5" fill="#13202c" text-anchor="middle">detector.py and currency.py</text>
+<rect x="520" y="366" width="250" height="48" rx="5" fill="#eef1f4" stroke="#13202c" stroke-width="1.5"/>
+<text x="645" y="387" font-size="12.5" fill="#13202c" text-anchor="middle">export_models.py:</text><text x="645" y="403" font-size="12.5" fill="#13202c" text-anchor="middle">the same three, as ONNX files</text>
+<path d="M812 324 H774 M812 352 V390 H774" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<line x1="812" y1="324" x2="774" y2="324" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<rect x="250" y="374" width="190" height="32" rx="5" fill="#fde9b0" stroke="#13202c" stroke-width="1.5"/>
+<text x="345" y="395" font-size="12.5" fill="#13202c" text-anchor="middle" font-weight="700">The demo page</text>
+<line x1="520" y1="390" x2="436" y2="390" fill="none" stroke="#13202c" stroke-width="1.5" marker-end="url(#arrow-ink)"/>
+<text x="480" y="382" font-size="11.5" fill="#53626f" text-anchor="middle" font-family="Consolas, Menlo, monospace" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">demo/models</text>
+</svg>
