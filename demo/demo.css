@@ -387,6 +387,17 @@ button, select { font: inherit; color: inherit; }
 .diagram .wire.on path { stroke-width: 3; }
 .diagram .wire.on text { fill: var(--ink); }
 .diagram .packet { fill: var(--ink); stroke: var(--surface); stroke-width: 2; }
+/* Following the visitor's own camera: what a phone or laptop lacks is faded,
+   and ringed when a step is about what it would have done. */
+.diagram .absent { opacity: 0.3; }
+.diagram .node.missing rect { stroke: var(--lidar); stroke-width: 2; stroke-dasharray: 5 3; }
+
+.go-live { color: var(--muted); }
+.device-asks legend { margin-bottom: 0.5rem; }
+.inside { font-weight: 700; }
+.shot { display: grid; gap: 0.5rem; margin: 0; max-width: 24rem; }
+.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; }
+.shot figcaption { color: var(--muted); font-size: 0.875rem; }
 
 .stepper { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 .stepper .next { border-color: var(--ink); background: var(--ink); color: var(--bg); }
@@ -453,7 +464,7 @@ button, select { font: inherit; color: inherit; }
 .key-view { background: var(--wash); border: 1px solid var(--line); }
 
 .device .notes { margin-bottom: 2rem; }
-.parts caption { padding-bottom: 0.5rem; }
+.parts caption { padding-bottom: 0.5rem; white-space: nowrap; }
 
 /* ---------------------------------------------------------------- sections */
 

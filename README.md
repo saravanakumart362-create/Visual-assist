@@ -92,6 +92,11 @@ driven by this project's own Python code, run in the browser by
   what each of them means. The messages are recorded from the real LiDAR and
   servo drivers (`visual_assist/lidar.py`, `servo.py`) talking to a
   simulated ESP8266 and LiDAR; see `trace()` in `visual_assist/simulation.py`.
+  A third choice, "Your camera, live", is not a recording: with the camera
+  demonstration running, it follows whatever the visitor asks through the
+  same diagram, showing the picture their camera took, what the models
+  found in it and the sentence built from that. The parts a phone or laptop
+  lacks (LiDAR, ESP8266, servos) are shown faded.
 
 The camera demonstration has no LiDAR and no turning head, so distances are
 camera estimates ("about 2 meters") and there is no route planning in it;

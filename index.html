@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="demo/demo.css?v=e6044c46">
+<link rel="stylesheet" href="demo/demo.css?v=3310e8dd">
 </head>
 <body>
 <a class="skip" href="#demo">Skip to the demo</a>
@@ -103,6 +103,7 @@
       </div>
       <p id="live-caption" class="caption" aria-hidden="true">The line being spoken appears here.</p>
       <p id="live-meter" class="meter"></p>
+      <p><a id="live-inside" class="inside" href="#device" hidden>See what each part of the device did for this answer</a></p>
     </div>
 
     <div class="panel">
@@ -155,35 +156,10 @@
   </ul>
 </section>
 
-<section aria-labelledby="how-title">
-  <div class="section-head">
-    <h2 id="how-title">How it finds the way</h2>
-    <p>Each time you ask, the demo above goes through these four stages. They repeat after every instruction, so a turn that was too wide or a step that was too short is corrected as it happens.</p>
-  </div>
-  <ol class="steps">
-    <li>
-      <h3>Look</h3>
-      <p>The head turns to five angles and takes a picture at each. A YOLOv5 model names what it sees: door, chair, table, person. In the demo this is the pale wedge that flashes in front of the user.</p>
-    </li>
-    <li>
-      <h3>Measure</h3>
-      <p>The head turns to the target and the LiDAR measures the distance. The reading is checked against how large the object looks in the picture, because a beam aimed at a door may be stopped by a chair in front of it.</p>
-    </li>
-    <li>
-      <h3>Plan</h3>
-      <p>The LiDAR sweeps 144 degrees in 6 degree steps. Each reading becomes an obstacle on a map with 10 cm cells, and the A* algorithm finds the shortest route that stays 35 cm clear of all of them. These are the red dots and the dashed line.</p>
-    </li>
-    <li>
-      <h3>Speak</h3>
-      <p>One action at a time: first a turn, and a walk only once the user faces a clear stretch. No walk is longer than what was just measured as clear, less a margin for uneven steps, and never more than five steps.</p>
-    </li>
-  </ol>
-</section>
-
 <section id="device" class="device" aria-labelledby="device-title">
   <div class="section-head">
     <h2 id="device-title">Inside the device</h2>
-    <p>Seven parts and the cables between them. Choose a command and step through it to see what each part sends to the next, from the voice at the microphone to the answer in the earphone.</p>
+    <p>Seven parts and the cables between them. Choose a command and step through it to see what each part sends to the next, from the voice at the microphone to the answer in the earphone. Two commands are recordings; the third follows whatever you ask your own camera.</p>
   </div>
 
   <div class="device-stage">
@@ -192,6 +168,7 @@
       <div class="choices">
         <button type="button" class="choice" data-scene="find" aria-pressed="true">"Where is the door?"</button>
         <button type="button" class="choice" data-scene="guide" aria-pressed="false">"Guide me to the door"</button>
+        <button type="button" class="choice" data-scene="live" aria-pressed="false">Your camera, live</button>
       </div>
     </fieldset>
 
@@ -240,7 +217,7 @@
 
         <circle id="packet" class="packet" r="5" hidden/>
       </svg>
-      <figcaption>Every part of the device and the cable that joins it to the Raspberry Pi. The boxes inside the Pi are the project's Python files. Parts at work in the current step are yellow.</figcaption>
+      <figcaption id="diagram-caption">Every part of the device and the cable that joins it to the Raspberry Pi. The boxes inside the Pi are the project's Python files. Parts at work in the current step are yellow.</figcaption>
     </figure>
 
     <div class="device-step">
@@ -254,7 +231,17 @@
         <h3 id="device-heading">Loading the walkthrough.</h3>
         <p id="device-body"></p>
       </div>
-      <div class="sent">
+      <p id="device-camera-off" class="go-live" hidden>The camera is off. <a href="#live">Start it in the section above</a>, then come back and ask here.</p>
+      <fieldset id="device-asks" class="device-asks" hidden>
+        <legend>Ask your camera</legend>
+        <div class="choices">
+          <button type="button" class="choice" data-device-ask="What is around me?">What is around me?</button>
+          <button type="button" class="choice" data-device-ask="Where is the door?">Where is the door?</button>
+          <button type="button" class="choice" data-device-ask="How far?">How far?</button>
+          <button type="button" class="choice" data-device-ask="What note is this?">What note is this?</button>
+        </div>
+      </fieldset>
+      <div class="sent" id="device-sent-box">
         <h3 id="device-sent-title">What is sent</h3>
         <ol id="device-sent" class="monitor" aria-labelledby="device-sent-title" tabindex="0"></ol>
       </div>
@@ -263,8 +250,9 @@
   </div>
 
   <ul class="notes">
-    <li>The messages shown were recorded from the project's own driver code: the text sent to the ESP8266 and the bytes read from the LiDAR are what the Raspberry Pi sends and expects. The ESP8266, the LiDAR and the room on the far end of the cables are simulated, as are the camera's pictures and the recognised words.</li>
-    <li>This has not yet been checked against the assembled device.</li>
+    <li>In the two recorded commands, the messages come from the project's own driver code: the text sent to the ESP8266 and the bytes read from the LiDAR are what the Raspberry Pi sends and expects. The ESP8266, the LiDAR and the room on the far end of the cables are simulated, as are the camera's pictures and the recognised words.</li>
+    <li>"Your camera, live" is not a recording. The picture, what was recognised in it and the answer are what happened in this page when you asked. A phone or laptop has no LiDAR, ESP8266 or servos, so those parts are shown faded and take no part.</li>
+    <li>None of this has yet been checked against the assembled device.</li>
   </ul>
 
   <table class="parts">
@@ -280,6 +268,31 @@
       <tr><th scope="row">Two servos</th><td>Turn the camera and LiDAR to look around and to sweep.</td><td>The ESP8266's pins D5 and D6</td></tr>
     </tbody>
   </table>
+</section>
+
+<section aria-labelledby="how-title">
+  <div class="section-head">
+    <h2 id="how-title">How it finds the way</h2>
+    <p>Each time you ask, the simulated room at the top of the page goes through these four stages. They repeat after every instruction, so a turn that was too wide or a step that was too short is corrected as it happens.</p>
+  </div>
+  <ol class="steps">
+    <li>
+      <h3>Look</h3>
+      <p>The head turns to five angles and takes a picture at each. A YOLOv5 model names what it sees: door, chair, table, person. In the demo this is the pale wedge that flashes in front of the user.</p>
+    </li>
+    <li>
+      <h3>Measure</h3>
+      <p>The head turns to the target and the LiDAR measures the distance. The reading is checked against how large the object looks in the picture, because a beam aimed at a door may be stopped by a chair in front of it.</p>
+    </li>
+    <li>
+      <h3>Plan</h3>
+      <p>The LiDAR sweeps 144 degrees in 6 degree steps. Each reading becomes an obstacle on a map with 10 cm cells, and the A* algorithm finds the shortest route that stays 35 cm clear of all of them. These are the red dots and the dashed line.</p>
+    </li>
+    <li>
+      <h3>Speak</h3>
+      <p>One action at a time: first a turn, and a walk only once the user faces a clear stretch. No walk is longer than what was just measured as clear, less a margin for uneven steps, and never more than five steps.</p>
+    </li>
+  </ol>
 </section>
 
 <section aria-labelledby="more-title">
@@ -363,7 +376,7 @@ python -m pytest                      # the tests</code></pre>
 </div>
 
 <script src="demo/demo.js?v=b6dcb4c3" defer></script>
-<script src="demo/live.js?v=a09d6126" defer></script>
-<script src="demo/device.js?v=ecddd0de" defer></script>
+<script src="demo/live.js?v=f80c0a80" defer></script>
+<script src="demo/device.js?v=c4cf2f47" defer></script>
 </body>
 </html>

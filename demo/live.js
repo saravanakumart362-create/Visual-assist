@@ -26,10 +26,15 @@
     currency: null,
     iou: 0.7,
     live: null, // the Python assistant
-    pending: [], // questions waiting for the next picture
+    pending: [], // questions waiting for the next picture: { text, spoken }
+    answering: null, // while a question is being answered: what is said, to report it
     busyUntil: 0,
     voiceMissing: "",
   };
+
+  // The "Inside the device" section shows what happened to each question.
+  // The two sections talk only through these events on the document.
+  const tell = (name, detail) => document.dispatchEvent(new CustomEvent(`visualassist:${name}`, { detail }));
 
   const setStatus = (text) => { $("live-status").textContent = text; };
 
@@ -56,26 +61,33 @@
     }
   }
 
-  // Called by the assistant for every sentence it says.
-  function say(text, language, urgent) {
-    addLine("assistant", text, language);
-    // Without a voice the line still takes time to read; the assistant
-    // holds back further guidance until then.
-    state.busyUntil = performance.now() + Math.min(4000, 900 + text.length * 45);
-    if (!$("live-sound").checked || !("speechSynthesis" in window)) return;
+  // Speaks a sentence if it can. Returns whether it did.
+  function speak(text, language, urgent) {
+    if (!$("live-sound").checked || !("speechSynthesis" in window)) return false;
     const voice = shared.voiceFor(language);
     if (!voice) {
       if (state.voiceMissing !== language) {
         state.voiceMissing = language;
         setStatus(`This browser has no ${shared.languageNames[language]} voice, so the answers are shown but not spoken.`);
       }
-      return;
+      return false;
     }
     if (urgent) speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = voice;
     utterance.lang = voice.lang;
     speechSynthesis.speak(utterance);
+    return true;
+  }
+
+  // Called by the assistant for every sentence it says.
+  function say(text, language, urgent) {
+    addLine("assistant", text, language);
+    // Without a voice the line still takes time to read; the assistant
+    // holds back further guidance until then.
+    state.busyUntil = performance.now() + Math.min(4000, 900 + text.length * 45);
+    const aloud = speak(text, language, urgent);
+    if (state.answering) state.answering.push({ text, aloud });
   }
 
   const isBusy = () => performance.now() < state.busyUntil
@@ -285,6 +297,48 @@
     }
   }
 
+  // ------------------------------------------- telling the diagram what happened
+
+  // The picture as it was when the question was answered, small enough to
+  // keep, with or without the outlines of what was detected in it. It goes
+  // no further than this page.
+  function snapshot(outlined) {
+    const canvas = document.createElement("canvas");
+    const scale = Math.min(1, 480 / video.videoWidth);
+    canvas.width = Math.round(video.videoWidth * scale);
+    canvas.height = Math.round(video.videoHeight * scale);
+    const context = canvas.getContext("2d");
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    if (outlined) context.drawImage(overlay, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL("image/jpeg", 0.8);
+  }
+
+  // One answered question as the steps it went through, in the form the
+  // "Inside the device" section plays (see demo/device.js). `note` is the
+  // banknote model's scores if it was asked; `said` is what was answered.
+  function report(question, note, said) {
+    const command = JSON.parse(state.live.command(question.text));
+    const intent = command ? command.intent : null;
+    const target = command ? command.target : null;
+    const size = [video.videoWidth, video.videoHeight];
+    const steps = [
+      { kind: "live-hear", text: question.text, spoken: question.spoken },
+      { kind: "understand", intent, target, typed: !question.spoken },
+    ];
+    if (intent === "money" && note) {
+      const scores = Object.entries(note).sort((a, b) => b[1] - a[1]).slice(0, 3);
+      steps.push({ kind: "live-note", pictures: NOTE_PICTURES, scores, picture: snapshot(false) });
+    } else if (["scan", "find", "guide", "distance"].includes(intent)) {
+      // These are answered from what is in the picture.
+      const view = JSON.parse(state.live.view());
+      steps.push({ kind: "live-see", bearing: 0, hfov: view.hfov, size, objects: view.objects, picture: snapshot(true) });
+      steps.push({ kind: "live-absent", intent, target });
+    }
+    for (const line of said) steps.push({ kind: "live-speak", ...line });
+    tell("answer", { command: question.text, steps });
+    $("live-inside").hidden = false;
+  }
+
   // --------------------------------------------------------------- the camera
 
   async function watch(run) {
@@ -296,20 +350,29 @@
       const started = performance.now();
       try {
         // Questions first, so each is answered from the picture taken after it.
-        for (const text of state.pending.splice(0)) {
-          if (state.live.intent(text) === "money") state.live.note(JSON.stringify(await readNote()));
+        const asked = state.pending.splice(0);
+        let note = null;
+        for (const { text } of asked) {
+          if (state.live.intent(text) === "money") {
+            note = await readNote();
+            state.live.note(JSON.stringify(note));
+          }
           state.live.hear(text);
         }
         const detections = [];
         for (const spec of state.detectors) detections.push(...await detect(spec));
         if (state.running !== run) return;
+        state.answering = asked.length ? [] : null;
         state.live.see(JSON.stringify({
           w: video.videoWidth,
           h: video.videoHeight,
           thumb: thumbnail(),
           detections: detections.map(({ label, confidence, box }) => [label, confidence, ...box]),
         }));
+        const said = state.answering;
+        state.answering = null;
         outline(detections);
+        if (asked.length) report(asked[asked.length - 1], note, said);
         const seconds = (performance.now() - started) / 1000;
         const guiding = state.live.guiding;
         $("live-meter").textContent = `${detections.length} recognised · ${seconds.toFixed(1)} s per picture`
@@ -369,6 +432,7 @@
     setStatus("Ask a question, or point the camera somewhere else.");
     state.live.set_language($("live-language").value);
     state.live.greet();
+    tell("camera", { running: true });
     watch(run);
   }
 
@@ -385,13 +449,15 @@
     $("live-meter").textContent = "";
     toggle.textContent = "Start the camera";
     toggle.dataset.state = "idle";
+    state.answering = null;
+    tell("camera", { running: false });
   }
 
-  function ask(text) {
+  function ask(text, spoken = false) {
     text = text.trim();
     if (!text || !state.running) return;
     addLine("user", text);
-    state.pending.push(text);
+    state.pending.push({ text, spoken });
   }
 
   // ------------------------------------------------------------------ wiring
@@ -416,6 +482,8 @@
     state.voiceMissing = "";
     if (state.live) state.live.set_language($("live-language").value);
   });
+  // Questions asked from beside the diagram.
+  document.addEventListener("visualassist:ask", (event) => ask(event.detail.text));
 
   // Spoken questions, where the browser can recognise speech.
   const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -428,7 +496,7 @@
       mic.dataset.listening = String(on);
       mic.textContent = on ? "Listening…" : "Speak";
     };
-    recognition.onresult = (event) => ask(event.results[0][0].transcript);
+    recognition.onresult = (event) => ask(event.results[0][0].transcript, true);
     recognition.onend = () => listening(false);
     recognition.onerror = (event) => {
       listening(false);

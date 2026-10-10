@@ -58,6 +58,30 @@ def test_finds_an_object_and_estimates_its_distance():
     assert page.ask("how far", PERSON) == ["Person straight ahead, about 3 meters away."]
 
 
+def test_reports_what_it_made_of_a_question_and_of_the_picture():
+    """The page shows these beside its diagram of the device."""
+    page = Page()
+    made = lambda text: json.loads(page.live.command(text))  # noqa: E731
+    assert made("Where is the door?") == {"intent": "find", "target": "door"}
+    assert made("what is around me") == {"intent": "scan", "target": None}
+    assert made("what note is this")["intent"] == "money"
+    assert made("lovely weather") is None
+
+    page.ask("where is the door", PERSON, DOOR_LEFT, ("table", 0.6, 500, 300, 630, 440))
+    view = json.loads(page.live.view())
+    assert view["hfov"] == 62.2
+    assert view["objects"] == [
+        {"label": "person", "confidence": 0.9, "position": "center", "bearing": 0, "looks": 2.91},
+        {"label": "door", "confidence": 0.8, "position": "left", "bearing": -19, "looks": 4.41},
+        # Tables come in every size, so this one's says nothing of its distance.
+        {"label": "table", "confidence": 0.6, "position": "right", "bearing": 25, "looks": None},
+    ]
+    # An upright phone sees a narrower angle from side to side.
+    page.show(("door", 0.8, 400, 200, 478, 440), width=480, height=640)
+    view = json.loads(page.live.view())
+    assert view["hfov"] == 48.8 and view["objects"][0]["bearing"] == 21
+
+
 def test_an_upright_phone_picture_uses_the_right_field_of_view():
     page = Page()
     # A phone held upright: the picture is taller than wide, so its wide

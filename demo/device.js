@@ -1,9 +1,11 @@
 // "Inside the device": one spoken command followed from part to part.
-// The steps come from demo/device.json, recorded by the project's own
+// Two commands come from demo/device.json, recorded by the project's own
 // LiDAR and servo drivers talking to simulated parts (see trace() in
-// visual_assist/simulation.py). This file only shows them: it lights the
-// parts at work on the diagram, moves a dot along the cables in use, and
-// lists what was sent.
+// visual_assist/simulation.py). The third, "Your camera, live", is whatever
+// the visitor last asked in the camera section: demo/live.js reports the
+// steps that question really went through. This file only shows steps: it
+// lights the parts at work on the diagram, moves a dot along the cables in
+// use, and lists what was sent.
 (() => {
   "use strict";
 
@@ -38,13 +40,35 @@
   };
   PARTS.centre = PARTS.turn;
   PARTS.sweep = PARTS.aim;
+  // A question put to the visitor's own camera. Some of these depend on how
+  // it was asked and answered, so they are worked out from the step.
+  const NOTHING = { nodes: [], hops: [] };
+  Object.assign(PARTS, {
+    "live-wait": NOTHING,
+    "live-hear": (step) => (step.spoken ? PARTS.hear : { nodes: ["wearer"], hops: [] }),
+    "live-see": PARTS.see,
+    "live-note": PARTS.see,
+    "live-absent": { ...NOTHING, missing: ["head", "esp", "servo", "lidar", "lid"] },
+    "live-speak": (step) => (step.aloud ? PARTS.speak : { nodes: ["hub", "phr"], hops: ["say"] }),
+  });
+  const understood = PARTS.understand;
+  PARTS.understand = (step) => (step.typed ? { nodes: ["cmd", "hub"], hops: ["cmd"] } : understood);
+  const partsOf = (step) => (typeof PARTS[step.kind] === "function" ? PARTS[step.kind](step) : PARTS[step.kind]);
+
+  // What a phone or laptop does not have. Shown faded while the camera is followed.
+  const NOT_HERE = { nodes: ["head", "esp", "servo", "lidar", "lid", "plan"], wires: ["head", "usb", "pwm", "uart", "lid", "plan"] };
+  const CAPTION = {
+    device: $("diagram-caption").textContent,
+    live: "Your camera stands in for the Pi Camera, your microphone and speakers for the USB microphone and the earphone, and this page for the Raspberry Pi. The faded parts are not on a phone or laptop.",
+  };
 
   const state = {
-    scenes: {}, // name -> { command, steps }
+    scenes: {}, // name -> { command, steps }; "live" appears once a question is answered
     scene: "find",
     index: 0,
     playing: null, // the timer that moves on to the next step
     motion: 0, // raised to stop the dot that is travelling
+    camera: false, // whether the visitor's camera is running
   };
 
   // ------------------------------------------------------------------ wording
@@ -63,8 +87,16 @@
   function seen(objects) {
     if (!objects.length) return [["Detection", "nothing it knows"]];
     return objects.map((object) => ["Detection",
-      `${object.label}, ${Math.round(object.confidence * 100)}% sure, ${PLACES[object.position]}, `
-      + `looks ${about(object.looks)} away`]);
+      `${object.label}, ${Math.round(object.confidence * 100)}% sure, ${PLACES[object.position]}`
+      // Some things come in every size, so theirs says nothing of the distance.
+      + (object.looks === null ? "" : `, looks ${about(object.looks)} away`)]);
+  }
+
+  // The banknote model's classes are named like "500", "100_new" and "none".
+  function rupees(name) {
+    if (name === "none") return "no note";
+    const [value, series] = name.split("_");
+    return series ? `₹${value}, ${series} series` : `₹${value}`;
   }
 
   const reading = (value) => (value === null ? "no reading: nothing in range" : metres(value));
@@ -86,8 +118,10 @@
     }),
     understand: (step) => ({
       heading: "The words become a command",
-      body: "commands.py compares the words with the commands it knows and with the names of the things the detector can recognise. The assistant now knows what to do and what to do it with.",
-      sent: [["Command", `${step.intent}: ${step.target}`]],
+      body: "commands.py compares the words with the commands it knows and with the names of the things the detector can recognise. "
+        + (step.intent ? "The assistant now knows what to do and what to do it with."
+          : "These words matched none of them. The assistant then stays quiet: a microphone overhears a great deal that is not meant for it."),
+      sent: [["Command", step.intent ? [step.intent, step.target].filter(Boolean).join(": ") : "none"]],
     }),
     speak: (step, last, scene) => ({
       heading: last ? "The answer" : "The assistant speaks",
@@ -177,6 +211,58 @@
         ],
       };
     },
+
+    // ---- a question put to the visitor's own camera
+    "live-wait": (step) => ({
+      heading: step.running ? "Ask your camera a question" : "Start your camera first",
+      body: step.running
+        ? "Ask with the buttons below. The parts will light up in turn with what really happened to your question: the picture your camera took, what the models found in it, and the sentence that was built from that."
+        : "This one is not a recording. It follows a real question through the parts, with your own camera in place of the Pi Camera.",
+      sent: [],
+    }),
+    "live-hear": (step) => ({
+      heading: step.spoken ? "You speak" : "You type the question",
+      body: step.spoken
+        ? "Your microphone picked up the voice and your browser's speech recogniser turned it into words. On the device a USB microphone and a recogniser on the Raspberry Pi do the same."
+        : "Typed words need no microphone and no speech recogniser, so those two parts are passed by. On the device the question is spoken.",
+      sent: step.spoken
+        ? [["Microphone → page", "your voice"], ["Speech to text", quoted(step.text), "said"]]
+        : [["Typed", quoted(step.text), "said"]],
+    }),
+    "live-see": (step) => ({
+      heading: "Your camera takes a picture",
+      body: `Your camera sent a picture of ${step.size.join(" × ")} pixels. The project's two detection models, running in this page, went through it: one for everyday objects, one trained on doors. `
+        + "They name what they find and say where in the picture it is. How large a thing looks tells roughly how far away it is.",
+      sent: [["Camera → page", `one picture, ${step.size.join(" × ")}`], ...seen(step.objects)],
+    }),
+    "live-note": (step) => ({
+      heading: "The banknote model reads the note",
+      body: `A banknote is not looked for by the detection models. The middle of ${step.pictures} pictures goes to a model trained on Indian notes, which gives every kind of note a score, and the scores are averaged. `
+        + "Under 50% counts as no note at all; under 80% the answer is offered as a guess. On the diagram this model shares the Detection box; its code is currency.py.",
+      sent: [["Camera → page", `${step.pictures} pictures`],
+        ...step.scores.map(([name, score]) => ["Banknote model", `${rupees(name)}: ${Math.round(score * 100)}%`])],
+    }),
+    "live-absent": (step) => {
+      const thing = step.target || "nearest thing";
+      const would = {
+        scan: "The device would now turn its head to four more angles, taking a picture and a LiDAR reading at each. This page has no turning head and no LiDAR, so it answers from the one picture.",
+        guide: `The device would now measure the distance to the ${thing} with its LiDAR, sweep the room and plan a way round whatever is in between, as "Guide me to the door" shows. `
+          + "This page has no LiDAR and no turning head, so it says only which way to turn and how far the camera judges it to be.",
+      };
+      return {
+        heading: "What the device would do next",
+        body: would[step.intent] || `The device would now turn its head towards the ${thing} and measure the distance with its LiDAR, as "Where is the door?" shows. `
+          + "This page has neither, so the distance is the camera's estimate and the answer says \"about\".",
+        sent: [["Not on this page", "ESP8266, servos, LiDAR"]],
+      };
+    },
+    "live-speak": (step, last) => ({
+      heading: last ? "The answer" : "The assistant speaks",
+      body: "phrases.py builds the sentence in the chosen language. " + (step.aloud
+        ? "Your browser's voice then speaks it. On the device a speech synthesiser on the Raspberry Pi does, into the earphone."
+        : "Here it is shown but not spoken: sound is switched off, or this browser has no voice for the language. On the device it is spoken into the earphone."),
+      sent: [["Sentence", quoted(step.text), "said"], ...(step.aloud ? [["Page → speakers", "the sentence as sound"]] : [])],
+    }),
   };
 
   // ------------------------------------------------------------------ diagram
@@ -184,9 +270,15 @@
   const wire = (name) => $(`w-${name}`);
 
   function light(parts) {
-    for (const lit of diagram.querySelectorAll(".on")) lit.classList.remove("on");
+    for (const lit of diagram.querySelectorAll(".on, .missing, .absent")) lit.classList.remove("on", "missing", "absent");
+    if (state.scene === "live") {
+      for (const name of NOT_HERE.nodes) $(`n-${name}`).classList.add("absent");
+      for (const name of NOT_HERE.wires) wire(name).classList.add("absent");
+    }
     for (const name of parts.nodes) $(`n-${name}`).classList.add("on");
     for (const hop of parts.hops) wire(hop.replace("<", "")).classList.add("on");
+    // The parts a step is about but that are not there to do it.
+    for (const name of parts.missing || []) $(`n-${name}`).classList.replace("absent", "missing");
   }
 
   function hopTime(hop) {
@@ -200,7 +292,7 @@
   // step takes its place.
   function travel(hops) {
     const mine = ++state.motion;
-    if (reducedMotion) {
+    if (reducedMotion || !hops.length) {
       packet.setAttribute("hidden", "");
       return;
     }
@@ -307,10 +399,11 @@
       svg.append(shape("text", { x: x2 + 3, y: y2 + 3 }, `${ring} m`));
     }
 
-    if (["turn", "see", "look", "centre"].includes(step.kind)) {
+    if (["turn", "see", "look", "centre", "live-see"].includes(step.kind)) {
       // The slice of the room the camera now has in its picture.
-      const [x1, y1] = polar(step.bearing - HFOV / 2, SWEEP_RANGE);
-      const [x2, y2] = polar(step.bearing + HFOV / 2, SWEEP_RANGE);
+      const fov = step.hfov || HFOV;
+      const [x1, y1] = polar(step.bearing - fov / 2, SWEEP_RANGE);
+      const [x2, y2] = polar(step.bearing + fov / 2, SWEEP_RANGE);
       const r = SWEEP_RANGE * VIEW.scale;
       svg.append(shape("path", { class: "view", d: `M${VIEW.x} ${VIEW.y} L${x1} ${y1} A${r} ${r} 0 0 1 ${x2} ${y2} Z` }));
       keys.set("view", "In the camera's picture");
@@ -334,7 +427,9 @@
       told.push(`The camera put a ${label} ${metres(Math.hypot(x, y), 1)} away.`);
     }
     for (const object of step.objects || []) {
-      const [cx, cy] = polar(object.bearing, object.looks);
+      if (object.looks === null) continue; // no telling how far: it cannot be placed
+      // A real camera may judge something further off than the drawing reaches.
+      const [cx, cy] = polar(object.bearing, Math.min(object.looks, SWEEP_RANGE + 0.5));
       const target = object.label === "door";
       svg.append(shape("circle", { class: target ? "goal" : "thing", cx, cy, r: 5 }));
       svg.append(shape("text", { class: "name", x: cx + 8, y: cy + 3 }, object.label));
@@ -394,23 +489,51 @@
     return figure;
   }
 
+  // The picture the visitor's camera took, as the models saw it.
+  function shot(step) {
+    const figure = document.createElement("figure");
+    figure.className = "shot";
+    const picture = document.createElement("img");
+    picture.src = step.picture;
+    picture.alt = step.objects && step.objects.length
+      ? `The picture from your camera, with ${step.objects.map((object) => object.label).join(", ")} outlined.`
+      : "The picture from your camera.";
+    const caption = document.createElement("figcaption");
+    caption.textContent = "The picture your camera sent. It has not left this page.";
+    figure.append(picture, caption);
+    return figure;
+  }
+
   // --------------------------------------------------------------- the player
 
+  // The steps being shown. Until a question has been put to the camera,
+  // "Your camera, live" has one step, which says how to begin.
+  function steps() {
+    const scene = state.scenes[state.scene];
+    return scene ? scene.steps : [{ kind: "live-wait", running: state.camera }];
+  }
+
   function show() {
-    const { steps } = state.scenes[state.scene];
-    const step = steps[state.index];
-    const last = state.index === steps.length - 1;
+    const all = steps();
+    const step = all[state.index];
+    const last = state.index === all.length - 1;
     const told = TELL[step.kind](step, last, state.scene);
-    const parts = PARTS[step.kind];
+    const parts = partsOf(step);
+    const live = state.scene === "live";
 
     light(parts);
     travel(parts.hops);
 
     $("device-heading").textContent = told.heading;
     $("device-body").textContent = told.body;
-    $("device-count").textContent = `Step ${state.index + 1} of ${steps.length}`;
+    $("device-count").textContent = all.length > 1 ? `Step ${state.index + 1} of ${all.length}` : "";
     $("device-back").disabled = state.index === 0;
-    $("device-next").textContent = last ? "Start again" : "Next";
+    $("device-next").disabled = $("device-play").disabled = all.length === 1;
+    $("device-next").textContent = last && all.length > 1 ? "Start again" : "Next";
+    $("diagram-caption").textContent = live ? CAPTION.live : CAPTION.device;
+    $("device-asks").hidden = !(live && state.camera);
+    $("device-camera-off").hidden = !(live && !state.camera);
+    $("device-sent-box").hidden = !told.sent.length;
 
     const list = $("device-sent");
     list.replaceChildren(...told.sent.map(([who, what, style]) => {
@@ -428,13 +551,14 @@
     list.scrollTop = 0;
 
     const extra = [];
+    if (step.picture) extra.push(shot(step));
     if (step.frame) extra.push(frameTable(step.frame));
     if ("bearing" in step || step.readings || step.rays) extra.push(above(step));
     $("device-extra").replaceChildren(...extra);
   }
 
   function go(index) {
-    const count = state.scenes[state.scene].steps.length;
+    const count = steps().length;
     state.index = ((index % count) + count) % count;
     show();
   }
@@ -449,14 +573,15 @@
   // Play moves on by itself, staying on each step for at least one journey
   // of the dot, and stops at the last.
   function play() {
-    const { steps } = state.scenes[state.scene];
-    if (state.index === steps.length - 1) go(0);
+    const all = steps();
+    if (all.length === 1) return;
+    if (state.index === all.length - 1) go(0);
     $("device-play").textContent = "Pause";
     $("device-play").setAttribute("aria-pressed", "true");
     const wait = () => {
-      const hops = PARTS[steps[state.index].kind].hops;
+      const { hops } = partsOf(all[state.index]);
       state.playing = setTimeout(() => {
-        if (state.index === steps.length - 1) {
+        if (state.index === all.length - 1) {
           stop();
           return;
         }
@@ -491,6 +616,29 @@
     });
     $("device-play").addEventListener("click", () => (state.playing === null ? play() : stop()));
     choose(state.scene);
+
+    // ---- the visitor's own camera (demo/live.js)
+    for (const button of document.querySelectorAll("[data-device-ask]")) {
+      button.addEventListener("click", () => {
+        document.dispatchEvent(new CustomEvent("visualassist:ask", { detail: { text: button.dataset.deviceAsk } }));
+        $("device-heading").textContent = "Waiting for the next picture…";
+      });
+    }
+    document.addEventListener("visualassist:camera", (event) => {
+      state.camera = event.detail.running;
+      if (state.scene === "live") show();
+    });
+    // A question has been answered: follow it, if that is what is being watched.
+    document.addEventListener("visualassist:answer", (event) => {
+      state.scenes.live = event.detail;
+      if (state.scene !== "live") return;
+      choose("live");
+      play();
+    });
+    $("live-inside").addEventListener("click", () => {
+      choose("live");
+      play();
+    });
   }
 
   fetch("demo/device.json", { cache: "no-cache" })

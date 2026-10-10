@@ -20,6 +20,7 @@ from .assistant import Assistant
 from .currency import decide
 from .detector import Detection
 from .lidar import NullLidar
+from .navigator import pixel_bearing
 from .servo import NullPanTilt
 
 
@@ -160,6 +161,33 @@ class LiveAssistant:
         """What kind of request this is ("money", "find", ...), or None."""
         command = commands.parse(text, self.detector.labels)
         return command.intent if command else None
+
+    def command(self, text: str) -> str:
+        """What the command parser makes of `text`, for the page to show.
+
+        JSON: {"intent", "target"}, or null if it is not a command.
+        """
+        command = commands.parse(text, self.detector.labels)
+        return json.dumps(command and {"intent": command.intent, "target": command.target})
+
+    def view(self) -> str:
+        """The current picture as the assistant sees it, for the page to show.
+
+        JSON: {"hfov": the camera's angle of view, "objects": [{"label",
+        "confidence", "position", "bearing", "looks"}, ...]}. `bearing` is
+        in degrees right of the middle of the picture; `looks` is how far
+        away the object's size suggests it is, null where size tells nothing.
+        """
+        hfov = self.cfg.camera.hfov_deg
+        objects = []
+        for det in self.detector.latest:
+            looks = self.assistant._visual(det)
+            objects.append({
+                "label": det.label, "confidence": round(det.confidence, 2),
+                "position": det.position,
+                "bearing": round(pixel_bearing(det.cx, det.frame_width, hfov)),
+                "looks": None if looks is None else round(looks, 2)})
+        return json.dumps({"hfov": hfov, "objects": objects})
 
     def note(self, scores: str) -> None:
         """The banknote model's answer for the picture: JSON {class: probability}."""
