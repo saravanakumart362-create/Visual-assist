@@ -46,6 +46,22 @@ def parse_frame(frame: bytes) -> Optional[float]:
     return distance_m
 
 
+def encode_frame(distance_m: Optional[float], strength: int = 1200) -> bytes:
+    """The frame a TF-Luna would send for a distance: parse_frame in reverse.
+
+    None stands for nothing within range, which the sensor reports as a
+    signal too weak to trust. Used by the simulator and the tests.
+    """
+    if distance_m is None:
+        distance_cm, strength = 0, MIN_STRENGTH // 2
+    else:
+        distance_cm = round(distance_m * 100)
+    # The last two are the chip temperature, here 25 °C: (25 + 256) * 8.
+    body = bytes([HEADER, HEADER, distance_cm & 0xFF, distance_cm >> 8,
+                  strength & 0xFF, strength >> 8, 0xC8, 0x08])
+    return body + bytes([sum(body) & 0xFF])
+
+
 class NullLidar:
     """Stands in when no LiDAR is connected: every reading is 'unknown'."""
 
@@ -61,10 +77,13 @@ class NullLidar:
 class TFLuna:
     available = True
 
-    def __init__(self, port: str, baudrate: int = 115200):
-        import serial
+    def __init__(self, port: str, baudrate: int = 115200, connection=None):
+        """`connection` replaces the serial port, for the simulator and tests."""
+        if connection is None:
+            import serial
 
-        self._serial = serial.Serial(port, baudrate, timeout=0.3)
+            connection = serial.Serial(port, baudrate, timeout=0.3)
+        self._serial = connection
 
     def read(self) -> Optional[float]:
         """Latest distance straight ahead in metres, or None."""

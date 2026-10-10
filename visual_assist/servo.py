@@ -61,14 +61,17 @@ class _PanTilt:
 
 
 class Esp8266PanTilt(_PanTilt):
-    def __init__(self, cfg):
+    def __init__(self, cfg, connection=None):
+        """`connection` replaces the serial port, for the simulator and tests."""
         super().__init__(cfg)
-        import serial
+        if connection is None:
+            import serial
 
-        self._serial = serial.Serial(cfg.port, cfg.baudrate, timeout=1.0)
-        # Opening the port resets a NodeMCU; let it boot, then drop its boot log.
-        time.sleep(2.0)
-        self._serial.reset_input_buffer()
+            connection = serial.Serial(cfg.port, cfg.baudrate, timeout=1.0)
+            # Opening the port resets a NodeMCU; let it boot, then drop its boot log.
+            time.sleep(2.0)
+            connection.reset_input_buffer()
+        self._serial = connection
 
     def _send(self, line: str) -> None:
         self._serial.write((line + "\n").encode("ascii"))

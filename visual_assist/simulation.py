@@ -13,15 +13,25 @@ from __future__ import annotations
 
 import math
 
-from . import config
+from . import commands, config
 from .assistant import Assistant
 from .detector import Detection
-from .navigator import TYPICAL_SIZE_M, normalise, turn_degrees
+from .lidar import TFLuna, encode_frame
+from .navigator import (
+    TYPICAL_SIZE_M, normalise, pixel_bearing, turn_degrees, visual_distance,
+)
+from .servo import Esp8266PanTilt
 
 WIDTH, HEIGHT = 640, 480
 HFOV, VFOV = 62.2, 48.8
 FOCAL = (HEIGHT / 2) / math.tan(math.radians(VFOV / 2))
 LIDAR_RANGE = 8.0
+# The servo pulse range set in firmware/esp8266_pan_tilt (microseconds).
+PULSE_MIN_US, PULSE_MAX_US = 500, 2500
+
+
+def _rounded(value, places: int = 2):
+    return None if value is None else round(value, places)
 
 
 class Clock:
@@ -194,6 +204,7 @@ class FakeDetector:
     def __init__(self, world: World, labels=("chair", "door", "person", "table")):
         self.world = world
         self.labels = sorted(labels)
+        self.report = False  # also record what was found in each picture
 
     def detect(self, frame) -> list:
         def column(angle: float) -> float:
@@ -215,6 +226,12 @@ class FakeDetector:
             tall = real_height * FOCAL / surface
             y1, y2 = max(0.0, HEIGHT / 2 - tall / 2), min(float(HEIGHT), HEIGHT / 2 + tall / 2)
             detections.append(Detection(label, 0.9, (x1, y1, x2, y2), WIDTH, HEIGHT))
+        if self.report:
+            self.world.log("found", objects=[
+                {"label": d.label, "confidence": d.confidence, "position": d.position,
+                 "bearing": round(self.world.pan + pixel_bearing(d.cx, WIDTH, HFOV)),
+                 "looks": _rounded(visual_distance(d.label, d.box, WIDTH, HEIGHT, HFOV, VFOV))}
+                for d in detections])
         return detections
 
 
@@ -365,6 +382,230 @@ def record(things, blocks=(), language: str = "en") -> dict:
         "reached": assistant.profile.guided("door") > 0,
         "closest": None if math.isinf(closest) else round(closest, 2),
     }
+
+
+class SimulatedUart:
+    """The TF-Luna's serial line: every read is answered with one frame."""
+
+    def __init__(self, world: World):
+        self.world = world
+
+    def reset_input_buffer(self) -> None:
+        pass
+
+    def read(self, count: int) -> bytes:
+        distance = self.world.ray(self.world.pan)
+        frame = encode_frame(distance)
+        self.world.log("wire", link="uart", data=frame.hex(" ").upper(),
+                       metres=_rounded(distance))
+        return frame
+
+    def close(self) -> None:
+        pass
+
+
+class SimulatedEsp8266:
+    """The ESP8266 on its USB serial line, doing what its firmware does."""
+
+    def __init__(self, world: World, cfg):
+        self.world = world
+        self.cfg = cfg  # the ServoConfig, for where "straight ahead" is
+        self._reply = b""
+
+    def reset_input_buffer(self) -> None:
+        pass
+
+    def write(self, data: bytes) -> None:
+        line = data.decode("ascii").strip()
+        self.world.log("wire", link="usb", data=line)
+        name, _, value = line.partition(" ")
+        if name not in ("PAN", "TILT") or not value.isdigit():
+            self._reply = b"ERR\n"
+            return
+        angle = max(0, min(180, int(value)))
+        pulse = round(PULSE_MIN_US + angle * (PULSE_MAX_US - PULSE_MIN_US) / 180)
+        if name == "PAN":
+            sign = 1 if self.cfg.pan_invert else -1
+            self.world.pan = float((angle - self.cfg.pan_center) * sign)
+        self.world.log("wire", link="pwm", servo=name.lower(), pulse_us=pulse,
+                       bearing=round(self.world.pan))
+        self._reply = b"OK\n"
+
+    def readline(self) -> bytes:
+        self.world.log("wire", link="usb-reply", data=self._reply.decode("ascii").strip())
+        return self._reply
+
+    def close(self) -> None:
+        pass
+
+
+# The walkthroughs in the demo page's "Inside the device" section:
+# name -> (what the wearer says, (labelled things, anonymous blocks)).
+SCENES = {
+    "find": ("Where is the door", ({"door": (2.22, 2.64, 0.45), "chair": (-1.2, 2.2, 0.25)}, [])),
+    "guide": ("Guide me to the door", ROOMS["chair"]),
+}
+
+
+def _steps(events: list) -> list:
+    """The events of a trace, gathered into the steps the page walks through."""
+    queue = list(events)
+
+    def head_turn() -> dict:
+        """One turn of the head: the PAN and TILT commands and what came of them."""
+        turn = {"sent": [], "replies": [], "pulses_us": []}
+        while queue and queue[0]["type"] == "wire" and len(turn["replies"]) < 2:
+            event = queue.pop(0)
+            if event["link"] == "usb":
+                turn["sent"].append(event["data"])
+            elif event["link"] == "usb-reply":
+                turn["replies"].append(event["data"])
+            else:
+                turn["pulses_us"].append(event["pulse_us"])
+                if event["servo"] == "pan":
+                    turn["bearing"] = event["bearing"]
+        return turn
+
+    def next_is(kind: str) -> bool:
+        return bool(queue) and (queue[0]["type"] == kind or queue[0].get("link") == kind)
+
+    steps, obstacles, shown_in_full = [], [], False
+    while queue:
+        event = queue.pop(0)
+        kind = event["type"]
+        if kind == "obstacles":
+            obstacles = event["found"]
+        elif kind == "heard":
+            steps.append({"kind": "hear", "text": event["text"]})
+        elif kind == "understood":
+            steps.append({"kind": "understand", "intent": event["intent"],
+                          "target": event["target"]})
+        elif kind == "say":
+            steps.append({"kind": "speak", "text": event["text"]})
+        elif kind == "plan":
+            steps.append({"kind": "plan", "legs": event["legs"], "blocker": event["blocker"],
+                          "direct": event["direct"], "obstacles": obstacles})
+        elif kind == "ranged" and steps[-1]["kind"] == "aim":
+            steps[-1].update(target=event["label"], looks=event["looks"],
+                             distance=event["distance"], approx=event["approx"])
+        elif kind == "wire" and event["link"] == "usb":
+            queue.insert(0, event)
+            turn = head_turn()
+            if next_is("photo"):
+                queue.pop(0)
+                view = {"objects": queue.pop(0)["objects"]}
+                reading = queue.pop(0)
+                beam = {"frame": reading["data"], "metres": reading["metres"]}
+                if shown_in_full:
+                    steps.append({"kind": "look", **turn, **view, **beam})
+                else:
+                    # The first view, one cable at a time.
+                    shown_in_full = True
+                    steps.append({"kind": "turn", **turn})
+                    steps.append({"kind": "see", "bearing": turn["bearing"], **view})
+                    steps.append({"kind": "measure", "bearing": turn["bearing"], **beam})
+            elif next_is("uart"):
+                reading = queue.pop(0)
+                steps.append({"kind": "aim", **turn, "frame": reading["data"],
+                              "metres": reading["metres"]})
+            else:
+                steps.append({"kind": "centre", **turn})
+
+    # Readings taken one after another with no object in mind are the sweep.
+    merged, goal = [], None
+    for step in steps:
+        if step["kind"] == "aim" and "target" not in step:
+            if merged[-1]["kind"] != "sweep":
+                merged.append({"kind": "sweep", "readings": []})
+            merged[-1]["readings"].append({
+                "sent": step["sent"][0], "bearing": step["bearing"],
+                "frame": step["frame"], "metres": step["metres"]})
+            continue
+        if step["kind"] == "aim":
+            goal = [step["bearing"], step["distance"]]
+        elif step["kind"] == "plan":
+            sweep = next(s for s in reversed(merged) if s["kind"] == "sweep")
+            step["rays"] = [[r["bearing"], r["metres"]] for r in sweep["readings"]]
+            step["goal"] = goal
+        merged.append(step)
+    return merged
+
+
+def trace(scene: str) -> dict:
+    """One spoken command followed through the device, cable by cable.
+
+    The LiDAR and servo drivers here are the real ones; only what is on
+    the far end of each serial line is simulated. So the text and bytes
+    recorded are what the Raspberry Pi really sends and expects. The
+    camera, the detector and the speech recogniser are stand-ins.
+
+    Returns the command and `steps`, each a dict with a `kind`:
+
+        hear        text: what the speech recogniser made of the voice
+        understand  intent, target: what the command parser made of that
+        speak       text: a sentence sent to the earphone
+        turn        the head turns. sent: the lines of text the Pi sends
+                    the ESP8266; replies: its answers; pulses_us: the
+                    pulse it then gives each servo; bearing: where the
+                    head now points, in degrees right of straight ahead
+        see         objects: what the detector named in one picture, each
+                    with its place in it and the distance its size suggests
+        measure     frame: the LiDAR's 9 bytes, in hex; metres: what they
+                    mean (None = nothing in range)
+        look        turn, see and measure in one, for the later views
+        aim         turn and measure at an object. looks: the camera's
+                    estimate; distance, approx: what the two together gave
+        centre      the head turns back to straight ahead
+        sweep       readings: a turn and a frame for each direction
+        plan        rays: the sweep as [bearing, metres]; obstacles: what
+                    the planner was given, each [x, y, radius, label] in
+                    metres right of and ahead of the wearer; goal:
+                    [bearing, metres]; legs: the route, each [bearing,
+                    metres]; blocker: what was found in the way
+    """
+    command, (things, blocks) = SCENES[scene]
+    cfg = config.from_dict({"servo": {"settle_s": 0}, "planner": {"sweep_settle_s": 0}})
+    world, speaker = World(things, blocks), FakeSpeaker()
+    world.events = []
+    detector = FakeDetector(world)
+    detector.report = True
+    assistant = Assistant(
+        cfg, FakeCamera(world), detector,
+        TFLuna("simulated", connection=SimulatedUart(world)),
+        Esp8266PanTilt(cfg.servo, connection=SimulatedEsp8266(world, cfg.servo)),
+        speaker, clock=Clock())
+    assistant._running = True
+
+    measure, gather = assistant._range, assistant._obstacles
+
+    def ranged(sighting):
+        result = measure(sighting)
+        world.log("ranged", label=result.label, looks=_rounded(result.visual, 1),
+                  distance=_rounded(result.distance), approx=result.approx)
+        return result
+
+    def gathered(guide, sighting):
+        obstacles = gather(guide, sighting)
+        world.log("obstacles", found=[
+            [round(o.x, 2), round(o.y, 2), round(o.radius, 2), o.label] for o in obstacles])
+        return obstacles
+
+    def said(kind: str, **details) -> None:
+        # The route is planned just before the sentence that acts on it.
+        route = assistant.route
+        if route is not None and not any(e["type"] == "plan" for e in world.events):
+            world.log("plan", direct=route.direct, blocker=route.blocker,
+                      legs=[[round(leg.bearing), round(leg.length, 1)] for leg in route.legs])
+        world.log(kind, **details)
+
+    assistant._range, assistant._obstacles = ranged, gathered
+    speaker.log = said
+    world.log("heard", text=command.lower())
+    parsed = commands.parse(command, detector.labels)
+    world.log("understood", intent=parsed.intent, target=parsed.target)
+    assistant.submit(command)
+    assistant._drain_commands()
+    return {"command": command, "steps": _steps(world.events)}
 
 
 def demonstrate(room: str = "chair", language: str = "en", seed: int = None) -> None:

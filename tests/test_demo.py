@@ -10,8 +10,10 @@ from pathlib import Path
 
 import pytest
 
+from visual_assist import config
+from visual_assist.lidar import find_frame, parse_frame
 from visual_assist.phrases import available
-from visual_assist.simulation import ROOMS, record
+from visual_assist.simulation import ROOMS, SimulatedEsp8266, World, record, trace
 
 ROOT = Path(__file__).resolve().parent.parent
 DEMO = ROOT / "demo"
@@ -52,13 +54,107 @@ def test_every_language_can_be_recorded(language):
     assert sum(event["type"] == "say" for event in run["events"]) >= 5
 
 
-def test_shipped_recordings_match_the_current_code():
+def of_kind(steps, *kinds):
+    return [step for step in steps if step["kind"] in kinds]
+
+
+def test_a_trace_follows_a_command_through_every_cable():
+    steps = trace("find")["steps"]
+    assert [step["kind"] for step in steps] == [
+        "hear", "understand", "speak", "turn", "see", "measure",
+        "look", "look", "look", "look", "aim", "centre", "speak"]
+    assert steps[1] == {"kind": "understand", "intent": "find", "target": "door"}
+
+    # The scan: five views from 60 degrees left to 60 right, each acknowledged.
+    views = of_kind(steps, "turn", "look")
+    assert [view["sent"] for view in views] == [
+        [f"PAN {angle}", "TILT 90"] for angle in (150, 120, 90, 60, 30)]
+    assert [view["bearing"] for view in views] == [-60, -30, 0, 30, 60]
+    assert all(view["replies"] == ["OK", "OK"] for view in views)
+    assert views[0]["pulses_us"] == [2167, 1500] and views[2]["pulses_us"] == [1500, 1500]
+
+    # Every frame shown means, to the real parser, the distance shown beside it.
+    frames = of_kind(steps, "measure", "look", "aim")
+    assert len(frames) == 6
+    for step in frames:
+        sent = bytes.fromhex(step["frame"])
+        assert find_frame(sent) == sent
+        assert parse_frame(sent) == (None if step["metres"] is None
+                                     else pytest.approx(step["metres"], abs=0.006))
+
+    # Aimed at the door, the LiDAR agrees with the camera, so it is believed.
+    aim, = of_kind(steps, "aim")
+    assert (aim["sent"][0], aim["target"], aim["metres"], aim["looks"]) == ("PAN 50", "door", 3.0, 3.0)
+    assert aim["distance"] == 3.0 and not aim["approx"]
+    assert steps[-1]["text"] == "The door is slightly to your right, 3 meters away."
+    assert json.loads(json.dumps(steps)) == steps  # plain data, ready for the page
+
+
+def test_a_trace_shows_why_the_route_goes_round_the_chair():
+    steps = trace("guide")["steps"]
+    # The beam aimed at the door stops at the chair; the camera's estimate stands.
+    aim, = of_kind(steps, "aim")
+    assert (aim["metres"], aim["looks"], aim["distance"], aim["approx"]) == (2.2, 5.0, 5.0, True)
+
+    sweep, = of_kind(steps, "sweep")
+    assert [reading["sent"] for reading in sweep["readings"]] == [
+        f"PAN {angle}" for angle in range(162, 12, -6)]
+    plan, = of_kind(steps, "plan")
+    assert plan["rays"] == [[r["bearing"], r["metres"]] for r in sweep["readings"]]
+    assert [ray for ray in plan["rays"] if ray[1] is not None] == [[0, 2.2]]
+    assert plan["goal"] == [0, 5.0] and plan["blocker"] == "chair" and not plan["direct"]
+    assert plan["legs"][0][0] < 0  # round the chair by the left
+    assert [step["text"] for step in of_kind(steps, "speak")] == [
+        "Scanning.", "The door is straight ahead, about 5 meters away.",
+        "Chair in the way. Turn slightly left."]
+
+
+def test_the_simulated_esp8266_does_what_the_firmware_does():
+    world = World()
+    world.events = []
+    servo = config.from_dict({}).servo
+    esp = SimulatedEsp8266(world, servo)
+
+    def send(line):
+        esp.write(line.encode("ascii") + b"\n")
+        return esp.readline()
+
+    assert send("PAN 0") == b"OK\n" and world.pan == 90   # hard right
+    assert send("PAN 999") == b"OK\n" and world.pan == -90  # held to 180
+    assert send("TILT 45") == b"OK\n" and world.pan == -90
+    assert send("SPIN 3") == b"ERR\n" and send("PAN") == b"ERR\n"
+    pulses = [event["pulse_us"] for event in world.events if event.get("link") == "pwm"]
+    assert pulses == [500, 2500, 1000]
+
+
+def make_recordings():
     spec = importlib.util.spec_from_file_location("make_recordings", DEMO / "make_recordings.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    shipped = json.loads((DEMO / "recordings.json").read_text(encoding="utf-8"))
-    current = json.loads(json.dumps(module.build()))
+    return module
+
+
+@pytest.mark.parametrize("name", ["recordings.json", "device.json"])
+def test_shipped_recordings_match_the_current_code(name):
+    shipped = json.loads((DEMO / name).read_text(encoding="utf-8"))
+    current = json.loads(json.dumps(make_recordings().OUTPUTS[name]()))
     assert shipped == current, "run: python demo/make_recordings.py"
+
+
+def test_the_page_links_name_the_current_style_sheet_and_scripts():
+    """A browser keeps old copies of files. A link that changes whenever its
+    file does makes it fetch the new one, so a new page is never shown in
+    old styles or run by old scripts."""
+    page = (ROOT / "index.html").read_text(encoding="utf-8")
+    stamps = re.findall(r'"(demo/[\w.-]+\.(?:css|js))\?v=(\w{8})"', page)
+    assert [file for file, _ in stamps] == [
+        "demo/demo.css", "demo/demo.js", "demo/live.js", "demo/device.js"]
+    assert make_recordings().stamped(page) == page, "run: python demo/make_recordings.py"
+
+    # The code depends on the file's contents, but not on its line endings.
+    stamp = make_recordings().stamped
+    assert stamp('<link href="demo/demo.css">') == stamp('<link href="demo/demo.css?v=old">')
+    assert stamp('href="README.md" src="demo/models/x.onnx"') == 'href="README.md" src="demo/models/x.onnx"'
 
 
 def test_the_page_loads_every_file_the_guidance_needs(tmp_path):
@@ -117,8 +213,9 @@ def test_git_does_not_ignore_the_files_the_page_needs():
     """An ignored file never reaches GitHub, and the page then fails there."""
     if not (ROOT / ".git").exists() or shutil.which("git") is None:
         pytest.skip("not a git checkout")
-    needed = ["index.html", ".nojekyll", "demo/demo.js", "demo/live.js", "demo/demo.css",
-              "demo/recordings.json", "demo/models/models.json", "demo/models/doors.onnx",
+    needed = ["index.html", ".nojekyll", "demo/demo.js", "demo/live.js", "demo/device.js",
+              "demo/demo.css", "demo/recordings.json", "demo/device.json",
+              "demo/models/models.json", "demo/models/doors.onnx",
               "demo/models/yolov5nu.onnx", "demo/models/currency.onnx",
               "visual_assist/__init__.py", "visual_assist/live.py"]
     ignored = subprocess.run(["git", "check-ignore", *needed], cwd=ROOT,
@@ -128,7 +225,9 @@ def test_git_does_not_ignore_the_files_the_page_needs():
 
 def test_the_page_points_at_files_that_exist():
     page = (ROOT / "index.html").read_text(encoding="utf-8")
-    for reference in re.findall(r'(?:href|src)="((?:demo|visual_assist)/[^"]+)"', page):
+    references = re.findall(r'(?:href|src)="((?:demo|visual_assist)/[^"?]+)(?:\?[^"]*)?"', page)
+    assert "demo/demo.css" in references and "demo/device.js" in references
+    for reference in references:
         assert (ROOT / reference).is_file(), reference
     # GitHub Pages hides files starting with "_" (such as __init__.py)
     # unless this marker file is present.

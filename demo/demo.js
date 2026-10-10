@@ -454,7 +454,9 @@
       const pyodide = await window.loadPyodide({ indexURL: PYODIDE });
       pyodide.FS.mkdirTree("/project/visual_assist/locales");
       await Promise.all(FILES.map(async (name) => {
-        const response = await fetch(`visual_assist/${name}`);
+        // "no-cache": ask the server whether the copy the browser kept is
+        // still current, so an old file is never mixed with new ones.
+        const response = await fetch(`visual_assist/${name}`, { cache: "no-cache" });
         if (!response.ok) throw new Error(`${name}: HTTP ${response.status}`);
         pyodide.FS.writeFile(`/project/visual_assist/${name}`, new Uint8Array(await response.arrayBuffer()));
       }));
@@ -673,7 +675,7 @@ def guide(room, language):
 
   readColours();
   setEngine("idle");
-  fetch("demo/recordings.json")
+  fetch("demo/recordings.json", { cache: "no-cache" })
     .then((response) => (response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`))))
     .then((presets) => {
       state.presets = presets;

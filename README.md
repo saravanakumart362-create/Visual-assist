@@ -71,9 +71,9 @@ the conversation and a map of the path walked.
 
 ## Demo page
 
-`index.html` is a web page with two demonstrations, both driven by this
-project's own Python code, run in the browser by
-[Pyodide](https://pyodide.org):
+`index.html` is a web page with three demonstrations. The first two are
+driven by this project's own Python code, run in the browser by
+[Pyodide](https://pyodide.org); the third plays a recording made by it:
 
 - **A simulated room.** Visitors drag the door and the obstacles around,
   choose a language, press "Guide me to the door" and watch the route being
@@ -85,6 +85,13 @@ project's own Python code, run in the browser by
   [ONNX Runtime](https://onnxruntime.ai); the picture never leaves the
   visitor's device. This is what `python main.py --keyboard` does on a
   laptop, with nothing to install.
+- **Inside the device.** A diagram of every part and the cable that joins
+  it to the Raspberry Pi. Visitors step through "where is the door" or
+  "guide me to the door" and see what each part sends to the next: the text
+  commands to the ESP8266, the pulses to the servos, the LiDAR's 9 bytes and
+  what each of them means. The messages are recorded from the real LiDAR and
+  servo drivers (`visual_assist/lidar.py`, `servo.py`) talking to a
+  simulated ESP8266 and LiDAR; see `trace()` in `visual_assist/simulation.py`.
 
 The camera demonstration has no LiDAR and no turning head, so distances are
 camera estimates ("about 2 meters") and there is no route planning in it;
@@ -105,9 +112,12 @@ Opening `index.html` by double-clicking does not work, because browsers do
 not let a page read other files straight from the disk.
 
 The two preset rooms play from `demo/recordings.json`, so they start at once
-and work even where Pyodide cannot load. After changing the guidance code,
-refresh that file with `python demo/make_recordings.py`; the tests fail
-while it is out of date. Keep the empty `.nojekyll` file: without it GitHub
+and work even where Pyodide cannot load; the device walkthrough plays from
+`demo/device.json`. After changing the guidance code, or the page's style
+sheet or scripts, run `python demo/make_recordings.py`; the tests fail until
+you do. It refreshes both files and renews the `?v=` codes on the links in
+`index.html`, which make browsers fetch the changed files instead of
+showing the new page with old ones they kept. Keep the empty `.nojekyll` file: without it GitHub
 Pages hides `visual_assist/__init__.py` and the page cannot load the code.
 
 The models the camera demonstration uses are in `demo/models/`. After
@@ -418,7 +428,9 @@ ever touched); the door and banknote models on held-out photos (figures
 above); speech synthesis in all four languages; a short live trial on a
 webcam with typed questions; and the demo page in a headless browser, its
 camera part with saved photos standing in for the camera. The camera part
-has not been tried on a real camera or on a phone.
+has not been tried on a real camera or on a phone. The LiDAR and servo
+drivers have been run only against the simulated LiDAR and ESP8266 that the
+device walkthrough uses.
 
 **Not verified:** anything on the Raspberry Pi itself — the Pi Camera, the
 TF-Luna, the servos and ESP8266, the microphone, and face recognition (its

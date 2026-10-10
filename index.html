@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="demo/demo.css">
+<link rel="stylesheet" href="demo/demo.css?v=e6044c46">
 </head>
 <body>
 <a class="skip" href="#demo">Skip to the demo</a>
@@ -180,6 +180,108 @@
   </ol>
 </section>
 
+<section id="device" class="device" aria-labelledby="device-title">
+  <div class="section-head">
+    <h2 id="device-title">Inside the device</h2>
+    <p>Seven parts and the cables between them. Choose a command and step through it to see what each part sends to the next, from the voice at the microphone to the answer in the earphone.</p>
+  </div>
+
+  <div class="device-stage">
+    <fieldset class="device-pick">
+      <legend>Command</legend>
+      <div class="choices">
+        <button type="button" class="choice" data-scene="find" aria-pressed="true">"Where is the door?"</button>
+        <button type="button" class="choice" data-scene="guide" aria-pressed="false">"Guide me to the door"</button>
+      </div>
+    </fieldset>
+
+    <figure class="device-figure">
+      <svg id="diagram" class="diagram" viewBox="0 0 420 524" role="img" aria-label="How the parts are joined. The wearer speaks into a USB microphone, plugged into the Raspberry Pi. Inside the Pi, speech to text feeds the command parser, which feeds the assistant. The assistant uses the route planner, drives head control, and receives from detection and the LiDAR reader. Head control sends text over USB serial to an ESP8266, which sends pulses to two servos. The Pi Camera sends pictures to detection over a ribbon cable. The TF-Luna LiDAR sends 9-byte frames to the LiDAR reader over a serial wire. The servos turn the camera and the LiDAR together. The assistant's sentence goes through text to speech and the audio jack to the earphone.">
+        <rect class="box" x="8" y="84" width="404" height="222" rx="6"/>
+        <text class="tag" x="210" y="101">RASPBERRY PI 4</text>
+        <rect class="box open" x="8" y="424" width="404" height="92" rx="6"/>
+        <text class="tag" x="210" y="504">PAN-TILT HEAD: THE SERVOS TURN CAMERA AND LIDAR TOGETHER</text>
+
+        <g class="wire" id="w-voice"><path d="M174 34 H134"/><polygon points="134,34 141,30 141,38"/><text x="154" y="26">voice</text></g>
+        <g class="wire" id="w-usbaudio"><path d="M78 56 V112"/><polygon points="78,112 74,105 82,105"/><text class="start" x="86" y="74">USB audio</text></g>
+        <g class="wire" id="w-text"><path d="M78 156 V180"/><polygon points="78,180 74,173 82,173"/></g>
+        <g class="wire" id="w-cmd"><path d="M134 202 H154"/><polygon points="154,202 147,198 147,206"/></g>
+        <g class="wire" id="w-plan"><path d="M210 180 V156"/><polygon points="210,156 206,163 214,163"/><polygon points="210,180 206,173 214,173"/></g>
+        <g class="wire" id="w-say"><path d="M266 202 H286"/><polygon points="286,202 279,198 279,206"/></g>
+        <g class="wire" id="w-tts"><path d="M342 180 V156"/><polygon points="342,156 338,163 346,163"/></g>
+        <g class="wire" id="w-audio"><path d="M342 112 V56"/><polygon points="342,56 338,63 346,63"/><text class="end" x="334" y="74">3.5 mm jack</text></g>
+        <g class="wire" id="w-sound"><path d="M286 34 H246"/><polygon points="246,34 253,30 253,38"/><text x="266" y="26">sound</text></g>
+        <g class="wire" id="w-head"><path d="M166 224 V236 H78 V248"/><polygon points="78,248 74,241 82,241"/></g>
+        <g class="wire" id="w-usb"><path d="M78 292 V346"/><polygon points="78,346 74,339 82,339"/><polygon points="78,292 74,299 82,299"/><text class="start" x="88" y="322">USB serial</text><text class="start" x="88" y="334">lines of text</text></g>
+        <g class="wire" id="w-pwm"><path d="M78 390 V440"/><polygon points="78,440 74,433 82,433"/><text class="start" x="88" y="411">PWM pulses</text></g>
+        <g class="wire" id="w-csi"><path d="M210 440 V292"/><polygon points="210,292 206,299 214,299"/><text class="start" x="220" y="322">CSI ribbon</text><text class="start" x="220" y="334">pictures</text></g>
+        <g class="wire" id="w-det"><path d="M210 248 V224"/><polygon points="210,224 206,231 214,231"/></g>
+        <g class="wire" id="w-uart"><path d="M342 440 V292"/><polygon points="342,292 338,299 346,299"/><text class="end" x="332" y="390">UART serial</text><text class="end" x="332" y="402">9-byte frames</text></g>
+        <g class="wire" id="w-lid"><path d="M342 248 V236 H254 V224"/><polygon points="254,224 250,231 258,231"/></g>
+
+        <g class="node" id="n-mic"><rect x="22" y="12" width="112" height="44" rx="4"/><text x="78" y="38">USB microphone</text></g>
+        <g class="node" id="n-wearer"><rect x="174" y="12" width="72" height="44" rx="22"/><text x="210" y="38">Wearer</text></g>
+        <g class="node" id="n-ear"><rect x="286" y="12" width="112" height="44" rx="4"/><text x="342" y="38">Earphone</text></g>
+
+        <g class="node" id="n-stt"><rect x="22" y="112" width="112" height="44" rx="4"/><text x="78" y="131">Speech to text</text><text class="file" x="78" y="146">listener.py</text></g>
+        <g class="node" id="n-plan"><rect x="154" y="112" width="112" height="44" rx="4"/><text x="210" y="131">Route planner</text><text class="file" x="210" y="146">planner.py</text></g>
+        <g class="node" id="n-tts"><rect x="286" y="112" width="112" height="44" rx="4"/><text x="342" y="131">Text to speech</text><text class="file" x="342" y="146">speech.py</text></g>
+        <g class="node" id="n-cmd"><rect x="22" y="180" width="112" height="44" rx="4"/><text x="78" y="199">Command</text><text class="file" x="78" y="214">commands.py</text></g>
+        <g class="node" id="n-hub"><rect x="154" y="180" width="112" height="44" rx="4"/><text x="210" y="199">Assistant</text><text class="file" x="210" y="214">assistant.py</text></g>
+        <g class="node" id="n-phr"><rect x="286" y="180" width="112" height="44" rx="4"/><text x="342" y="199">Sentence</text><text class="file" x="342" y="214">phrases.py</text></g>
+        <g class="node" id="n-head"><rect x="22" y="248" width="112" height="44" rx="4"/><text x="78" y="267">Head control</text><text class="file" x="78" y="282">servo.py</text></g>
+        <g class="node" id="n-det"><rect x="154" y="248" width="112" height="44" rx="4"/><text x="210" y="267">Detection</text><text class="file" x="210" y="282">detector.py</text></g>
+        <g class="node" id="n-lid"><rect x="286" y="248" width="112" height="44" rx="4"/><text x="342" y="267">LiDAR reader</text><text class="file" x="342" y="282">lidar.py</text></g>
+
+        <g class="node" id="n-esp"><rect x="22" y="346" width="112" height="44" rx="4"/><text x="78" y="365">ESP8266</text><text class="file" x="78" y="380">NodeMCU board</text></g>
+        <g class="node" id="n-servo"><rect x="22" y="440" width="112" height="44" rx="4"/><text x="78" y="459">Two servos</text><text class="file" x="78" y="474">pan and tilt</text></g>
+        <g class="node" id="n-cam"><rect x="154" y="440" width="112" height="44" rx="4"/><text x="210" y="459">Pi Camera</text><text class="file" x="210" y="474">640 × 480</text></g>
+        <g class="node" id="n-lidar"><rect x="286" y="440" width="112" height="44" rx="4"/><text x="342" y="459">TF-Luna LiDAR</text><text class="file" x="342" y="474">up to 8 m</text></g>
+
+        <circle id="packet" class="packet" r="5" hidden/>
+      </svg>
+      <figcaption>Every part of the device and the cable that joins it to the Raspberry Pi. The boxes inside the Pi are the project's Python files. Parts at work in the current step are yellow.</figcaption>
+    </figure>
+
+    <div class="device-step">
+      <div class="stepper">
+        <button type="button" class="quiet" id="device-back">Back</button>
+        <button type="button" class="quiet next" id="device-next">Next</button>
+        <button type="button" class="quiet" id="device-play" aria-pressed="false">Play</button>
+        <p id="device-count" class="count"></p>
+      </div>
+      <div class="step-text" aria-live="polite">
+        <h3 id="device-heading">Loading the walkthrough.</h3>
+        <p id="device-body"></p>
+      </div>
+      <div class="sent">
+        <h3 id="device-sent-title">What is sent</h3>
+        <ol id="device-sent" class="monitor" aria-labelledby="device-sent-title" tabindex="0"></ol>
+      </div>
+      <div id="device-extra" class="device-extra"></div>
+    </div>
+  </div>
+
+  <ul class="notes">
+    <li>The messages shown were recorded from the project's own driver code: the text sent to the ESP8266 and the bytes read from the LiDAR are what the Raspberry Pi sends and expects. The ESP8266, the LiDAR and the room on the far end of the cables are simulated, as are the camera's pictures and the recognised words.</li>
+    <li>This has not yet been checked against the assembled device.</li>
+  </ul>
+
+  <table class="parts">
+    <caption>The parts</caption>
+    <thead><tr><th scope="col">Part</th><th scope="col">Job</th><th scope="col">Joined to the Pi by</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Raspberry Pi 4</th><td>The only computer. Runs detection, route planning and speech.</td><td></td></tr>
+      <tr><th scope="row">USB microphone</th><td>Spoken commands in.</td><td>USB</td></tr>
+      <tr><th scope="row">Earphone</th><td>Spoken guidance out.</td><td>3.5 mm audio jack</td></tr>
+      <tr><th scope="row">Pi Camera</th><td>Pictures for object detection, face recognition and banknotes.</td><td>CSI ribbon cable</td></tr>
+      <tr><th scope="row">TF-Luna LiDAR</th><td>Distance along the centre of the picture, up to 8 m.</td><td>UART serial, 115200 baud: pins 8 and 10</td></tr>
+      <tr><th scope="row">ESP8266</th><td>Turns the Pi's text commands into the pulses that servos need.</td><td>USB serial, 115200 baud</td></tr>
+      <tr><th scope="row">Two servos</th><td>Turn the camera and LiDAR to look around and to sweep.</td><td>The ESP8266's pins D5 and D6</td></tr>
+    </tbody>
+  </table>
+</section>
+
 <section aria-labelledby="more-title">
   <div class="section-head">
     <h2 id="more-title">What else it does</h2>
@@ -210,23 +312,6 @@
       <dd>"Where is the door?" "What is around me?" "How far?" "Who is this?" Commands are spoken; an earphone carries the replies.</dd>
     </div>
   </dl>
-</section>
-
-<section aria-labelledby="device-title">
-  <div class="section-head">
-    <h2 id="device-title">On the device</h2>
-    <p>The demo replaces the hardware with a simulation. This is what the simulation stands in for.</p>
-  </div>
-  <table class="parts">
-    <thead><tr><th scope="col">Part</th><th scope="col">Job</th></tr></thead>
-    <tbody>
-      <tr><th scope="row">Raspberry Pi 4</th><td>Runs everything: detection, route planning, speech.</td></tr>
-      <tr><th scope="row">Pi Camera</th><td>Pictures for YOLOv5 object detection, face recognition and banknotes.</td></tr>
-      <tr><th scope="row">TF-Luna LiDAR</th><td>Distance along the centre of the picture, up to 8 m.</td></tr>
-      <tr><th scope="row">Pan-tilt servos, ESP8266</th><td>Turn the camera and LiDAR to look around and to sweep.</td></tr>
-      <tr><th scope="row">USB microphone, earphone</th><td>Spoken commands in, spoken guidance out.</td></tr>
-    </tbody>
-  </table>
 </section>
 
 <section aria-labelledby="measured-title">
@@ -277,7 +362,8 @@ python -m pytest                      # the tests</code></pre>
 </footer>
 </div>
 
-<script src="demo/demo.js" defer></script>
-<script src="demo/live.js" defer></script>
+<script src="demo/demo.js?v=b6dcb4c3" defer></script>
+<script src="demo/live.js?v=a09d6126" defer></script>
+<script src="demo/device.js?v=ecddd0de" defer></script>
 </body>
 </html>

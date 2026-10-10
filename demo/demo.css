@@ -344,6 +344,117 @@ button, select { font: inherit; color: inherit; }
   font-size: 0.9375rem;
 }
 
+/* -------------------------------------------------------- inside the device */
+
+/* The diagram is tall and narrow, so a phone shows it whole; on a wide
+   screen the step being explained sits beside it. */
+.device-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 27rem) minmax(0, 1fr);
+  grid-template-areas: "figure pick" "figure step";
+  grid-template-rows: auto 1fr;
+  gap: 1.25rem 2rem;
+  align-items: start;
+}
+.device-pick { grid-area: pick; }
+.device-pick legend { margin-bottom: 0.5rem; }
+.device-figure { grid-area: figure; display: grid; gap: 0.75rem; margin: 0; min-width: 0; }
+.device-figure figcaption { color: var(--muted); font-size: 0.9375rem; }
+.device-step { grid-area: step; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; min-width: 0; }
+
+.diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.diagram text { font: 700 12px var(--font-body); fill: var(--ink); text-anchor: middle; }
+.diagram text.file, .diagram .wire text, .diagram text.tag { font: 400 9.5px var(--font-mono); fill: var(--muted); }
+.diagram text.tag { letter-spacing: 0.06em; }
+.diagram text.start { text-anchor: start; }
+.diagram text.end { text-anchor: end; }
+.diagram .box { fill: var(--wash); stroke: var(--line); }
+.diagram .box.open { fill: none; stroke: var(--muted); stroke-dasharray: 4 4; }
+.diagram .node rect { fill: var(--surface); stroke: var(--obstacle); stroke-width: 1.25; }
+.diagram .node.on rect { fill: var(--accent); stroke: var(--accent-ink); }
+.diagram .node.on text { fill: var(--accent-ink); }
+.diagram .wire { color: var(--muted); }
+.diagram .wire path { fill: none; stroke: currentColor; stroke-width: 1.5; }
+.diagram .wire polygon { fill: currentColor; }
+.diagram .wire.on { color: var(--path); }
+.diagram .wire.on path { stroke-width: 3; }
+.diagram .wire.on text { fill: var(--ink); }
+.diagram .packet { fill: var(--ink); stroke: var(--surface); stroke-width: 2; }
+
+.stepper { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.stepper .next { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.stepper [aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.count { margin-left: auto; font: 0.8125rem/1.5 var(--font-mono); color: var(--muted); }
+
+.step-text { display: grid; gap: 0.5rem; }
+.step-text h3 { font-size: 1.25rem; }
+.step-text p { max-width: var(--measure); color: var(--muted); }
+
+.sent { display: grid; gap: 0.625rem; }
+.sent h3, .parts caption, .frame caption {
+  font: 500 0.8125rem/1.4 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+}
+.monitor {
+  display: grid;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.monitor.long { max-height: 15rem; overflow-y: auto; }
+.monitor li {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid var(--line);
+}
+.monitor .who {
+  font: 500 0.75rem/1.6 var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.monitor .data { font: 0.875rem/1.5 var(--font-mono); overflow-wrap: anywhere; }
+.monitor .said { font: 700 1rem/1.4 var(--font-body); }
+
+.device-extra { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+.frame { max-width: 30rem; font-size: 0.9375rem; }
+.frame caption { padding-bottom: 0.25rem; }
+.frame th, .frame td { padding-block: 0.375rem; }
+.frame tbody th { font: 500 0.875rem/1.6 var(--font-mono); }
+
+.above { display: grid; gap: 0.5rem; margin: 0; max-width: 24rem; }
+.above svg { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.above .ring { fill: none; stroke: var(--line); }
+.above text { font: 400 9px var(--font-mono); fill: var(--muted); }
+.above .view { fill: var(--wash); }
+.above .beam { stroke: var(--lidar); stroke-width: 1.5; }
+.above .beam.miss { stroke: var(--line); stroke-width: 1; }
+.above .hit { fill: var(--lidar); }
+.above .thing { fill: var(--obstacle); }
+.above .goal { fill: var(--accent); stroke: var(--accent-ink); stroke-width: 0.75; }
+.above .route { fill: none; stroke: var(--ink); stroke-width: 1.75; stroke-dasharray: 5 4; }
+.above .wearer { fill: var(--path); }
+.above text.name { font: 700 10px var(--font-body); fill: var(--ink); }
+.key-wearer { background: var(--path); border-radius: 50%; width: 0.75rem; }
+.key-view { background: var(--wash); border: 1px solid var(--line); }
+
+.device .notes { margin-bottom: 2rem; }
+.parts caption { padding-bottom: 0.5rem; }
+
 /* ---------------------------------------------------------------- sections */
 
 .steps {
@@ -420,11 +531,18 @@ tbody th { font-weight: 700; white-space: nowrap; }
 
 @media (max-width: 52rem) {
   .stage { grid-template-columns: minmax(0, 1fr); }
+  .device-stage { grid-template-columns: minmax(0, 1fr); grid-template-areas: "pick" "figure" "step"; grid-template-rows: none; }
+  .device-figure { max-width: 27rem; }
+  .monitor li { grid-template-columns: minmax(0, 1fr); gap: 0; }
   main { gap: 3.5rem; }
-  .results, .results tbody, .results tr, .results th, .results td { display: block; }
-  .results thead { display: none; }
-  .results tr { padding-block: 0.75rem; border-bottom: 1px solid var(--line); }
-  .results th, .results td { padding: 0.125rem 0; border: 0; }
+  :is(.results, .parts), :is(.results, .parts) :is(tbody, tr, th, td) { display: block; }
+  :is(.results, .parts) thead { display: none; }
+  :is(.results, .parts) tr { padding-block: 0.75rem; border-bottom: 1px solid var(--line); }
+  :is(.results, .parts) :is(th, td) { padding: 0.125rem 0; border: 0; }
+  /* With the column headings gone, say what the last cell is. */
+  .parts td:last-child { color: var(--muted); }
+  .parts td:last-child:not(:empty)::before { content: "Joined to the Pi by: "; }
+  .parts td:empty { display: none; }
   tbody th { white-space: normal; }
 }
 

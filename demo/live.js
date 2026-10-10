@@ -84,7 +84,7 @@
   // ------------------------------------------------------------------ models
 
   async function download(file, progress) {
-    const response = await fetch(MODELS + file);
+    const response = await fetch(MODELS + file, { cache: "no-cache" });
     if (!response.ok) throw new Error(`${file}: HTTP ${response.status}`);
     const reader = response.body.getReader();
     const chunks = [];
@@ -124,7 +124,7 @@
     window.ort.env.wasm.numThreads = 1;
     window.ort.env.wasm.proxy = true; // the models run in a worker, so the page stays responsive
 
-    const manifest = await (await fetch(`${MODELS}models.json`)).json();
+    const manifest = await (await fetch(`${MODELS}models.json`, { cache: "no-cache" })).json();
     let megabytes = 0;
     const progress = (bytes) => {
       megabytes += bytes / 1e6;

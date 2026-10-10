@@ -8,11 +8,12 @@ from visual_assist import config
 from visual_assist.commands import Command, parse
 from visual_assist.currency import decide, denomination
 from visual_assist.detector import Detection, MultiDetector, center_detection
-from visual_assist.lidar import find_frame, parse_frame
+from visual_assist.lidar import TFLuna, encode_frame, find_frame, parse_frame
 from visual_assist.navigator import (
     Instruction, Sighting, after_move, best_sightings, direction_of, fuse_distance,
     pixel_bearing, position_of, steps_for, turn_degrees, turn_for, visual_distance,
 )
+from visual_assist.servo import Esp8266PanTilt
 from visual_assist.speech import Speaker
 
 LABELS = ["bottle", "chair", "cup", "door", "person", "sofa", "table"]
@@ -114,6 +115,51 @@ def test_lidar_ignores_bad_checksum():
     bad[8] ^= 0xFF
     assert find_frame(bytes(bad)) is None
     assert find_frame(b"") is None
+
+
+def test_encode_frame_is_parse_frame_in_reverse():
+    assert encode_frame(2.4)[:4] == frame(240)[:4]
+    for metres in (0.2, 2.26, 8.0):
+        sent = encode_frame(metres)
+        assert find_frame(sent) == sent and parse_frame(sent) == pytest.approx(metres)
+    nothing = encode_frame(None)
+    assert find_frame(nothing) == nothing and parse_frame(nothing) is None
+
+
+class Line:
+    """A serial line that answers as it is told to and keeps what was written."""
+
+    def __init__(self, *answers):
+        self.answers = list(answers)
+        self.written = b""
+
+    def reset_input_buffer(self):
+        pass
+
+    def read(self, count):
+        return self.answers.pop(0)
+
+    def readline(self):
+        return self.answers.pop(0)
+
+    def write(self, data):
+        self.written += data
+
+
+def test_lidar_driver_reads_a_frame_that_arrives_in_two_parts():
+    whole = encode_frame(1.5)
+    assert TFLuna("", connection=Line(whole)).read() == pytest.approx(1.5)
+    assert TFLuna("", connection=Line(b"\x08" + whole[:8], whole[8:] + whole[:8])).read() == \
+        pytest.approx(1.5)
+    assert TFLuna("", connection=Line(b"", b"")).read() is None
+
+
+def test_servo_driver_sends_the_lines_the_firmware_expects():
+    line = Line(b"OK\n", b"OK\n", b"OK\n", b"ERR\n")
+    head = Esp8266PanTilt(config.from_dict({"servo": {"settle_s": 0}}).servo, connection=line)
+    head.look(-60)          # left of straight ahead is a larger servo angle
+    head.look(400, tilt=20)  # more than the servo can turn
+    assert line.written == b"PAN 150\nTILT 90\nPAN 0\nTILT 110\n"
 
 
 # --------------------------------------------------------------- navigator
