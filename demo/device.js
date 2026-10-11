@@ -48,6 +48,7 @@
     "live-hear": (step) => (step.spoken ? PARTS.hear : { nodes: ["wearer"], hops: [] }),
     "live-see": PARTS.see,
     "live-note": PARTS.see,
+    "live-faces": PARTS.see,
     "live-absent": { ...NOTHING, missing: ["head", "esp", "servo", "lidar", "lid"] },
     "live-speak": (step) => (step.aloud ? PARTS.speak : { nodes: ["hub", "phr"], hops: ["say"] }),
   });
@@ -242,6 +243,28 @@
       sent: [["Camera → page", `${step.pictures} pictures`],
         ...step.scores.map(([name, score]) => ["Banknote model", `${rupees(name)}: ${Math.round(score * 100)}%`])],
     }),
+    "live-faces": (step) => {
+      const { faces, registered, least } = step.people;
+      const each = faces.map((face, index) => {
+        const which = faces.length > 1 ? `Face ${index + 1}` : "The face";
+        if (!registered.length) return [which, "cannot be named: nobody is registered yet"];
+        const likeness = face.likeness.toFixed(2);
+        return [which, face.name
+          ? `${face.name}: likeness ${likeness}, and a name needs ${least}`
+          : `not known: likeness ${likeness} to the nearest registered face, under the ${least} a name needs`];
+      });
+      return {
+        heading: "The face models look at the picture",
+        body: "Two more models, running in this page as they do on the device. The first finds each face and five points on it: the eyes, the nose, the corners of the mouth. "
+          + "The second takes the face, straightened by those points, and turns it into 128 numbers. Those are compared with the numbers of every registered face: the more alike two faces are, the nearer their likeness is to 1.",
+        sent: [
+          ["Camera → page", `one picture, ${step.size.join(" × ")}`],
+          ["Face detector", faces.length ? `${faces.length} ${faces.length === 1 ? "face" : "faces"} close enough to tell apart` : "no face close enough to tell apart"],
+          ...each,
+          ["Registered", registered.length ? registered.join(", ") : "nobody yet"],
+        ],
+      };
+    },
     "live-absent": (step) => {
       const thing = step.target || "nearest thing";
       const would = {

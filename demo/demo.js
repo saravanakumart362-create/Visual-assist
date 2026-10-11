@@ -11,7 +11,7 @@
   const FILES = [
     "__init__.py", "config.py", "navigator.py", "planner.py", "phrases.py",
     "adaptation.py", "commands.py", "detector.py", "assistant.py", "simulation.py",
-    "lidar.py", "servo.py", "currency.py", "live.py",
+    "lidar.py", "servo.py", "currency.py", "faces.py", "live.py",
     "locales/en.json", "locales/hi.json", "locales/ml.json", "locales/ta.json",
   ];
   const VIEW = { left: -3.6, right: 3.6, bottom: -0.7, top: 6.5 }; // metres, a square

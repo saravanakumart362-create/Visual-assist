@@ -47,7 +47,7 @@ the door?", "Guide me to the table", "What note is this?".
 | Actuators | Two servos (pan and tilt) driven by an ESP8266, an earphone |
 | Language | Python 3 (about 4,000 lines in the `visual_assist` package) |
 | Detection | Ultralytics YOLO: a pretrained YOLOv5-nano for everyday objects, a YOLOv5-nano trained here for doors, a YOLOv8-nano classifier trained here for banknotes |
-| Tests | 162, none needing hardware |
+| Tests | 176, none needing hardware |
 | Origin | B.Tech project report "Navigating the Unseen: A Deep Learning Based Aid for the Blind", Government College of Engineering Kannur, April 2025 |
 
 The report describes the system but does not include source code. This
@@ -69,7 +69,7 @@ and has not been checked.
 | Find one object | The head looks at five angles, then turns to the object so the LiDAR can measure it |
 | Guide to an object | A LiDAR sweep, a map of obstacles, the A* shortest-path search, and one spoken action at a time |
 | Adapt to the wearer | Walking speed, pauses and familiarity change how early it warns and how much it says |
-| Recognise people | Face encodings compared with registered ones |
+| Recognise people | OpenCV's YuNet finds faces and SFace compares them with registered ones |
 | Read banknotes | An image classifier for Indian notes from ₹10 to ₹2000 |
 | Speak four languages | English, Malayalam, Hindi, Tamil |
 
@@ -346,7 +346,7 @@ All in [`visual_assist/`](../visual_assist/).
 | `speech.py` | Text to speech | `Speaker`, `OfflineVoice`, `GoogleVoice` |
 | `listener.py` | Speech to text | `VoskListener`, `GoogleListener`, `KeyboardListener` |
 | `currency.py` | Banknote recognition | `CurrencyReader`, `decide()`, `denomination()` |
-| `faces.py` | Face recognition and registration | `FaceBook`, `Face` |
+| `faces.py` | Face recognition and registration | `FaceBook`, `People`, `FaceModels`, `Face`, `similarity()` |
 | `simulation.py` | A simulated room, wearer and devices | `World`, `make()`, `record()`, `trace()` |
 | `live.py` | The assistant fed by a web page's camera | `LiveAssistant` |
 
@@ -1025,24 +1025,70 @@ mistake about money is the costly kind.
 
 ### 10.2 Faces
 
-Source: [`visual_assist/faces.py`](../visual_assist/faces.py), using the
-`face_recognition` library.
+Source: [`visual_assist/faces.py`](../visual_assist/faces.py).
 
-Each registered person is stored as one or more 128-number encodings in
-`data/faces/faces.json`. Photos are never kept and nothing leaves the
-device. A face in view matches a person if its distance to one of their
-encodings is at most `faces.tolerance` (0.5; lower is stricter).
+Two models from OpenCV's model zoo do the work. Both run on the OpenCV that
+is already installed, so nothing has to be compiled on the device.
+
+| Model | File in `weights/` | Job |
+|---|---|---|
+| YuNet | `face_detection_yunet_2023mar.onnx` (0.2 MB) | Finds the faces in a picture, with five landmarks on each: the eyes, the nose, the corners of the mouth |
+| SFace | `face_recognition_sface_2021dec.onnx` (39 MB) | Turns one face, straightened by its landmarks to 112 × 112 pixels, into 128 numbers: its *feature* |
+
+Pictures of the same person give features that point nearly the same way.
+How nearly is their **similarity**: the cosine of the angle between them,
+1 for identical and about 0 for unrelated faces.
+
+```mermaid
+flowchart LR
+    picture["Picture"]
+    yunet["YuNet:<br>find the faces"]
+    crop["Straighten each<br>by its landmarks"]
+    sface["SFace:<br>128 numbers"]
+    compare["Compare with every<br>registered feature"]
+    name["Similarity 0.45 or more:<br>that person's name"]
+    unknown["Less: someone<br>not known"]
+    picture --> yunet --> crop --> sface --> compare
+    compare --> name
+    compare --> unknown
+```
+
+**Recognising.** A face is given the name of the registered person whose
+feature it is most like, provided the similarity is at least
+`faces.similarity` (0.45). Otherwise it is "a person I do not know". At most
+the five largest faces in a picture are looked at, and faces narrower than
+`faces.min_face_px` (40 pixels, about two metres away) are left out: too
+few pixels to tell one person from another.
 
 - Every third picture is checked. Each person is announced at most once
   every 20 seconds, the most often met first.
 - An unknown face gets "There is a person I do not know. Say register face
   to remember them.", at most once every 20 seconds and not in a crowd.
-- "Register face" stores the largest face in view. If no name was given
-  the assistant asks for one and waits up to 15 seconds.
-  `python main.py register NAME` does the same from the command line.
 
-If the library is not installed, face recognition is switched off and
-everything else carries on.
+**Registering.** "Register face" or "Remember this person as Ashna" stores
+the feature of the largest face in view. The face must be at least twice
+`min_face_px` wide (within about a metre), so that the stored likeness is a
+good one; up to five pictures are tried. If no name was given the assistant
+asks for one and waits up to 15 seconds. `python main.py register NAME`
+does the same from the command line. Registering someone again adds another
+view of them, which helps them be recognised from more angles; the eight
+most recent views are kept.
+
+**What is stored.** Only the features, in `data/faces/faces.json`, with the
+name of the model that made them. Photos are never kept and nothing leaves
+the device. A file made by a different model is ignored with a warning,
+since its numbers cannot be compared with these.
+
+**Choosing the threshold.** On 352 faces from 292 unrelated photos, 0.05%
+of the pairs of faces from different photos scored 0.45 or more (0.34% at
+OpenCV's suggested 0.363). In a handful of photos of the same person the
+similarity was 0.75 to 0.98. The stricter 0.45 was chosen because, for a
+blind wearer, a wrong name is worse than "a person I do not know". Lower it
+if known people often go unrecognised; raise it if strangers are named.
+
+If the model files are missing and cannot be downloaded, or OpenCV is older
+than 4.8, face recognition is switched off with a warning and everything
+else carries on.
 
 ---
 
@@ -1188,8 +1234,11 @@ real device if it is there, otherwise carry on without it.
 | Key | Default | Meaning |
 |---|---|---|
 | `enabled` | true | |
-| `dir` | `data/faces` | Where the encodings are kept |
-| `tolerance` | 0.5 | Largest face distance that still matches |
+| `dir` | `data/faces` | Where the registered faces are kept |
+| `detector` | `weights/face_detection_yunet_2023mar.onnx` | The model that finds faces; downloaded on first use |
+| `recogniser` | `weights/face_recognition_sface_2021dec.onnx` | The model that tells faces apart; downloaded on first use |
+| `similarity` | 0.45 | Least likeness (0 to 1) for a face to be given a name. Higher is stricter |
+| `min_face_px` | 40 | Faces narrower than this are ignored; twice this is needed to register |
 | `every_n_frames` | 3 | Check every n-th picture |
 | `announce_cooldown_s` | 20 | Least time between announcing the same person |
 
@@ -1268,6 +1317,8 @@ These are not settings, but they shape the behaviour described above.
 | `weights/yolov5nu.pt` | Detector | 80 (COCO) | | By Ultralytics; downloaded on first run |
 | `weights/doors.pt` | Detector | door (and handle, cabinet door, refrigerator door, which are dropped) | `yolov5nu.pt` | DoorDetect and Open Images |
 | `weights/currency.pt` | Classifier | 10 kinds of note and "none" | `yolov8n-cls.pt` | Mendeley Indian banknote dataset, plus Open Images and door photos for "none" |
+| `weights/face_detection_yunet_2023mar.onnx` | Face detector | faces, with five landmarks | | By OpenCV's model zoo; downloaded on first use |
+| `weights/face_recognition_sface_2021dec.onnx` | Face recogniser | a 128-number feature | | By OpenCV's model zoo; downloaded on first use |
 
 From the public datasets to the models the device and the demo page use:
 
@@ -1350,11 +1401,13 @@ has not been tried with real notes.
 ### 13.3 Models for the browser
 
 [`demo/export_models.py`](../demo/export_models.py) converts the three
-models to ONNX (opset 17) into `demo/models/`, and writes `models.json`
-with each model's input size, confidence threshold and class names, all
-taken from `config.yaml`. The demo page therefore detects with the same
-settings as the device. Run it again after retraining a model or changing
-those settings; a test fails while they disagree.
+trained models to ONNX (opset 17) into `demo/models/`, copies the two face
+models there (they are ONNX files already), and writes `models.json` with
+each model's input size, thresholds and class names, all taken from
+`config.yaml`. The demo page therefore detects with the same settings as
+the device. Run it again after retraining a model or changing those
+settings; a test fails while they disagree. A model that has not changed
+since it was last converted is left alone.
 
 ### 13.4 Data sources
 
@@ -1437,7 +1490,7 @@ its own. It has three demonstrations.
 | Section | What the visitor does | What runs |
 |---|---|---|
 | **Ask for the door** | Drags a door and obstacles round a simulated room, picks a language, presses "Guide me to the door" | The project's own Python guidance code, in the browser |
-| **Try it on your own camera** | Starts their camera and asks "What is around me?", "Where is the door?", "What note is this?" by button, typing or voice | The project's three models, and its assistant, in the browser |
+| **Try it on your own camera** | Starts their camera and asks "What is around me?", "Where is the door?", "What note is this?", "Who is this?" by button, typing or voice; registers a face by name | The project's three models, and its assistant, in the browser |
 | **Inside the device** | Steps through a command and sees what each part sends to the next | Two recorded commands, and a live one that follows whatever was last asked of the camera |
 
 ### 15.2 How Python and the models run in a browser
@@ -1452,8 +1505,9 @@ loaded, everything happens in the visitor's browser.*
   the project's own files from `visual_assist/` and runs them unchanged. A
   test checks that this list is enough.
 - **Models.** [ONNX Runtime Web](https://onnxruntime.ai) (version 1.19.2)
-  runs the converted models in a worker, so the page stays responsive. The
-  first start downloads about 40 MB.
+  runs the models in a worker, so the page stays responsive. The first
+  start downloads about 40 MB; the two face models (39 MB) are fetched only
+  when someone first asks about a face.
 - **Speech.** The browser's own speech synthesis speaks the answers, and
   in Chrome and Edge its speech recognition takes spoken questions.
 - **Privacy.** The camera picture never leaves the visitor's device.
@@ -1503,15 +1557,39 @@ runs on the device.
 | `LiveAssistant` method | Purpose |
 |---|---|
 | `see(picture)` | One analysed picture; runs one step of the assistant |
-| `hear(text)` | A question, answered on the next picture |
+| `hear(text)` | A question, answered on the next picture. Returns what it was taken to be |
 | `intent(text)`, `command(text)` | What the command parser makes of a question |
 | `view()` | The current picture as the assistant sees it: each object's place, bearing and estimated distance |
 | `note(scores)` | The banknote model's scores |
+| `use_faces(on)` | Says whether the page has its face models loaded |
+| `people()` | The faces in the current picture: each one's box, name if known, and likeness |
 | `set_language(code)`, `greet()`, `camera_off()` | As named |
 | `guiding` | The object being guided to, if any |
 
 Because there is no LiDAR, distances are camera estimates ("about 2
-meters"), and there is no route planning. Face recognition is not included.
+meters"), and there is no route planning.
+
+**Faces on the page.** The page runs the same two face models as the device
+(section 10.2). OpenCV is not there to do the steps between them, so
+`live.js` does: it puts the picture in the top left of a black 640 × 640
+square for the detector, reads the detector's three grids of answers into
+boxes and landmarks, keeps the surest of any that overlap, and draws each
+face turned, scaled and shifted so that its landmarks land where the
+recogniser expects them. A prototype of exactly these steps gave the same
+boxes and landmarks as OpenCV, and features matching OpenCV's to four
+decimal places.
+
+The boxes and features go to Python with each picture, and from there on
+the code is the device's own: the same `FaceBook` and `People` match them
+against the registered faces with the same threshold. Three things differ:
+
+- Registered faces are kept in the page's memory only, and are forgotten
+  when the page is closed or reloaded.
+- The device waits up to 15 seconds for a name after "Register face". A
+  page cannot wait without freezing, so `LiveAssistant` asks the question
+  and takes the name from the next phrase.
+- The face models load on the first question about a face, not at the
+  start.
 
 ### 15.6 The device section
 
@@ -1580,7 +1658,7 @@ not let a page read other files straight from the disk.
 python -m pytest
 ```
 
-162 tests, about seven seconds, no hardware needed.
+176 tests, about seven seconds, no hardware needed.
 
 | File | Tests | Covers |
 |---|---|---|
@@ -1590,7 +1668,8 @@ python -m pytest
 | `tests/test_adaptation.py` | 19 | Speed from the LiDAR, pauses, warning distance, urgency, verbosity, the saved profile, crowds, familiar faces |
 | `tests/test_assistant.py` | 22 | The whole assistant in simulated rooms: find, scan, distance, guidance with and without a planner, giving up, faces, banknotes, language, wake word |
 | `tests/test_random_rooms.py` | 2 (4 runs) | 240 random cluttered rooms |
-| `tests/test_live.py` | 11 | The assistant fed by a web page: answers, upright phone pictures, banknotes, guidance by camera |
+| `tests/test_faces.py` | 11 | Face matching and its threshold, the saved file, registering only a face that is close, several tries, doing without when the models are missing; and that the real models load |
+| `tests/test_live.py` | 14 | The assistant fed by a web page: answers, upright phone pictures, banknotes, guidance by camera, faces found by the page, a name taken from the next phrase |
 | `tests/test_demo.py` | 11 | Recordings match the current code; the page's Python file list is complete; page links are stamped; browser models match `config.yaml`; nothing the page needs is ignored by git |
 
 **The random rooms.** 240 rooms are walked, half of them by a simulated
@@ -1632,7 +1711,7 @@ sudo raspi-config
 # 2. System packages
 sudo apt update
 sudo apt install -y python3-picamera2 python3-opencv espeak-ng mpg123 \
-                    portaudio19-dev cmake
+                    portaudio19-dev
 
 # 3. Python packages (the venv must see the apt-installed picamera2)
 python3 -m venv --system-site-packages venv
@@ -1646,7 +1725,9 @@ unzip vosk-model-small-en-us-0.15.zip && cd ..
 ```
 
 Copy the whole project folder to the Pi, including `weights/doors.pt` and
-`weights/currency.pt`. Flash the sketch in `firmware/esp8266_pan_tilt/` to
+`weights/currency.pt`. The two face models (39 MB) are downloaded to
+`weights/` the first time the assistant starts with an internet connection;
+copy them from the PC as well if the Pi will have none. Flash the sketch in `firmware/esp8266_pan_tilt/` to
 the ESP8266 with the Arduino IDE (board: *NodeMCU 1.0*), then plug it into
 the Pi.
 
@@ -1685,7 +1766,7 @@ Expect to adjust `config.yaml` when the hardware is first connected:
 | File | Content |
 |---|---|
 | `data/profile.json` | The user profile (section 9.3) |
-| `data/faces/faces.json` | Face encodings (section 10.2) |
+| `data/faces/faces.json` | The registered faces (section 10.2) |
 | The system's temporary folder, `visual_assist_tts/` | Cached speech from Google |
 
 `data/` is not committed to git: it is personal.
@@ -1702,8 +1783,13 @@ Expect to adjust `config.yaml` when the hardware is first connected:
 - The door and banknote models on held-out photos (section 13.2).
 - Speech synthesis in all four languages.
 - A short live trial on a webcam with typed questions.
+- Face registration and recognition, with saved photos standing in for the
+  camera: a person registered from one photo was named in other photos of
+  them, alone and beside someone else, and other people were not.
 - The demo page in a headless browser, its camera section with saved
-  photos standing in for the camera.
+  photos standing in for the camera. That includes faces: a person
+  registered there from one photo was named in other photos, and other
+  people were not.
 
 **Not verified**
 
@@ -1711,7 +1797,8 @@ Expect to adjust `config.yaml` when the hardware is first connected:
   servos and ESP8266, the microphone.
 - The LiDAR and servo drivers against real hardware. They have been run
   only against the simulated LiDAR and ESP8266.
-- Face recognition. Its library is not installed on the development PC.
+- Face recognition on a live camera, and how often it names people rightly
+  in everyday light and at everyday angles.
 - The demo page's camera section on a real camera or a phone, and its
   spoken questions and spoken answers.
 - The Malayalam, Hindi and Tamil sentences, by a native speaker.
@@ -1744,6 +1831,7 @@ silent or inconsistent, these choices were made:
 | LiDAR wiring | The circuit diagram labels the lines SDA/SCL (I²C); the code screenshot uses serial | UART wiring |
 | Servo control | The text says the ESP8266 drives the servos; the circuit diagram wires them to the Pi | Both are supported (`servo.backend`) |
 | Detection models | One custom model for doors, chairs and desks | The pretrained model for everyday objects and a separately trained one for doors, which keeps the pretrained model's accuracy |
+| Face recognition | | OpenCV's YuNet and SFace models. The widely used `face_recognition` library must be compiled on each machine and would not install on the development PC |
 
 The report also describes door detection, adaptation to the wearer,
 banknote recognition, speech in several languages and shortest-path

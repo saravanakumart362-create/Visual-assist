@@ -19,6 +19,7 @@ from .adaptation import UserProfile
 from .assistant import Assistant
 from .currency import decide
 from .detector import Detection
+from .faces import MAX_FACES, FaceBook, People
 from .lidar import NullLidar
 from .navigator import pixel_bearing
 from .servo import NullPanTilt
@@ -27,10 +28,13 @@ from .servo import NullPanTilt
 class LiveFrame:
     """One camera picture, reduced to what the assistant needs of it."""
 
-    def __init__(self, width: int, height: int, thumbnail=None):
+    def __init__(self, width: int, height: int, thumbnail=None, faces=None):
         self.width = width
         self.height = height
         self.thumbnail = list(thumbnail or [])  # a tiny grey copy, 0-255
+        # [(box, feature)] for the faces the page's models found in it;
+        # None if the page did not look for faces in this picture.
+        self.faces = faces
 
     def motion_since(self, previous):
         """(degrees turned, share of the picture that changed) since `previous`.
@@ -75,6 +79,25 @@ class LiveCurrency:
         if not scores:
             return None, 0.0
         return decide(scores)
+
+
+class LiveFaceModels:
+    """Stands where the face models stand on the device (faces.FaceModels).
+
+    The page runs those two models itself and sends what they found along
+    with each picture; this only hands that on.
+    """
+
+    def __init__(self, min_face_px: int):
+        self.min_face_px = min_face_px
+
+    def faces(self, frame, min_px=None) -> list:
+        """[(box, feature)] for the faces in a picture, the largest first."""
+        least = self.min_face_px if min_px is None else min_px
+        found = [face for face in getattr(frame, "faces", None) or []
+                 if face[0][2] - face[0][0] >= least]
+        found.sort(key=lambda face: -(face[0][2] - face[0][0]) * (face[0][3] - face[0][1]))
+        return found[:MAX_FACES]
 
 
 class LiveSpeaker:
@@ -129,6 +152,14 @@ class LiveAssistant:
             currency=self.currency,
             profile=UserProfile(None, self.cfg.adaptation.walk_speed_mps), **extras)
         self.assistant._running = True
+        # A page cannot wait for an answer as the device does (it would
+        # freeze), so a name that is asked for is taken from the next phrase.
+        self.assistant._ask = lambda key: None
+        self._naming = False
+        # Registered faces live in the page's memory and nowhere else. The
+        # assistant is given them once the page has its face models loaded.
+        self.faces = FaceBook(People(None, self.cfg.faces.similarity),
+                              LiveFaceModels(self.cfg.faces.min_face_px))
 
     def greet(self) -> None:
         self.speaker.say(self.assistant.phrases.t("ready"))
@@ -137,7 +168,8 @@ class LiveAssistant:
         """A camera picture has been analysed; let the assistant act on it.
 
         `picture` is JSON: {"w", "h", "detections": [[label, confidence,
-        x1, y1, x2, y2], ...], "thumb": [grey values]}.
+        x1, y1, x2, y2], ...], "thumb": [grey values]} and, if the page
+        looked for faces, "faces": [[x1, y1, x2, y2, [the 128 numbers]], ...].
         """
         data = json.loads(picture)
         width, height = int(data["w"]), int(data["h"])
@@ -145,7 +177,10 @@ class LiveAssistant:
         wide, narrow = max(self._fov), min(self._fov)
         camera = self.cfg.camera
         camera.hfov_deg, camera.vfov_deg = (wide, narrow) if width >= height else (narrow, wide)
-        self.camera.frame = LiveFrame(width, height, data.get("thumb"))
+        faces = data.get("faces")
+        if faces is not None:
+            faces = [((x1, y1, x2, y2), feature) for x1, y1, x2, y2, feature in faces]
+        self.camera.frame = LiveFrame(width, height, data.get("thumb"), faces)
         self.detector.latest = [
             Detection(label, float(confidence), (float(x1), float(y1), float(x2), float(y2)),
                       width, height)
@@ -153,13 +188,37 @@ class LiveAssistant:
         ]
         self.assistant.step()
 
-    def hear(self, text: str) -> None:
-        """A question was typed or spoken; it is answered on the next picture."""
-        self.assistant.submit(text)
+    def _command(self, text: str) -> Optional[commands.Command]:
+        """The command a phrase stands for, allowing for a name just asked for."""
+        command = commands.parse(text, self.detector.labels)
+        if self._naming and not (command and command.intent == "stop"):
+            # The whole phrase is the answer to "What is the person's name?".
+            return commands.parse(f"register as {text}")
+        return command
+
+    def hear(self, text: str) -> str:
+        """A question was typed or spoken; it is answered on the next picture.
+
+        Returns what the phrase was taken to be, as command() does.
+        """
+        command = self._command(text)
+        if self._naming:
+            self._naming = False
+            if command.intent == "stop" or not command.target:
+                self.speaker.say(self.assistant.phrases.t("registration_cancelled"))
+            else:
+                self.assistant.submit(f"remember this person as {command.target}")
+        elif (command and command.intent == "register" and not command.target
+              and self.assistant.faces is not None):
+            self._naming = True
+            self.speaker.say(self.assistant.phrases.t("ask_name"))
+        else:
+            self.assistant.submit(text)
+        return json.dumps(command and {"intent": command.intent, "target": command.target})
 
     def intent(self, text: str) -> Optional[str]:
         """What kind of request this is ("money", "find", ...), or None."""
-        command = commands.parse(text, self.detector.labels)
+        command = self._command(text)
         return command.intent if command else None
 
     def command(self, text: str) -> str:
@@ -167,8 +226,26 @@ class LiveAssistant:
 
         JSON: {"intent", "target"}, or null if it is not a command.
         """
-        command = commands.parse(text, self.detector.labels)
+        command = self._command(text)
         return json.dumps(command and {"intent": command.intent, "target": command.target})
+
+    def use_faces(self, on: bool) -> None:
+        """Say whether the page can find faces (its face models are loaded)."""
+        self.assistant.faces = self.faces if on else None
+
+    def people(self) -> str:
+        """The faces in the current picture as the assistant sees them.
+
+        JSON: {"registered": [names], "least": the likeness a name needs,
+        "faces": [{"box", "name", "likeness"}, ...]}. `likeness` is to the
+        registered face it is most like; `name` is null if that is too little.
+        """
+        frame = self.camera.frame
+        faces = self.faces.identify(frame) if frame is not None else []
+        return json.dumps({
+            "registered": self.faces.names, "least": self.cfg.faces.similarity,
+            "faces": [{"box": [round(v) for v in face.box], "name": face.name,
+                       "likeness": face.confidence} for face in faces]})
 
     def view(self) -> str:
         """The current picture as the assistant sees it, for the page to show.
@@ -207,6 +284,7 @@ class LiveAssistant:
         return guide.target if guide else None
 
     def camera_off(self) -> None:
+        self._naming = False
         self.camera.frame = None
         self.detector.latest = []
         self.assistant._guide = None

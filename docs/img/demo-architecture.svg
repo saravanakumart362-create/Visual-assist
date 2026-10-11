@@ -8,8 +8,8 @@
 <text x="36" y="134" font-size="13" fill="#13202c" font-weight="700">The visitor&#x27;s browser</text>
 <rect x="36" y="150" width="190" height="216" rx="6" fill="#eef1f4" stroke="#53626f" stroke-width="1" stroke-dasharray="5 4"/>
 <text x="131" y="170" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">ONNX Runtime Web</text>
-<rect x="52" y="244" width="158" height="72" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
-<text x="131" y="268.5" font-size="12.5" fill="#13202c" text-anchor="middle">yolov5nu.onnx</text><text x="131" y="284.5" font-size="12.5" fill="#13202c" text-anchor="middle">doors.onnx</text><text x="131" y="300.5" font-size="12.5" fill="#13202c" text-anchor="middle">currency.onnx</text>
+<rect x="52" y="236" width="158" height="88" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>
+<text x="131" y="260.5" font-size="12.5" fill="#13202c" text-anchor="middle">yolov5nu.onnx</text><text x="131" y="276.5" font-size="12.5" fill="#13202c" text-anchor="middle">doors.onnx</text><text x="131" y="292.5" font-size="12.5" fill="#13202c" text-anchor="middle">currency.onnx</text><text x="131" y="308.5" font-size="12.5" fill="#13202c" text-anchor="middle">and two face models</text>
 <rect x="290" y="150" width="200" height="330" rx="6" fill="#eef1f4" stroke="#53626f" stroke-width="1" stroke-dasharray="5 4"/>
 <text x="390" y="170" font-size="12" fill="#53626f" text-anchor="middle" font-weight="700">The page&#x27;s scripts</text>
 <rect x="306" y="184" width="168" height="52" rx="5" fill="#ffffff" stroke="#13202c" stroke-width="1.5"/>

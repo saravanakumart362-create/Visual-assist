@@ -9,6 +9,11 @@
   const MODELS = "demo/models/";
   const THUMBNAIL = { width: 32, height: 24 }; // a tiny grey copy, to notice movement
   const NOTE_PICTURES = 3; // a banknote is read from this many pictures, averaged
+  // Where the five points of a face (eyes, nose, corners of the mouth) belong
+  // in the 112 x 112 picture the face recogniser was trained on.
+  const FACE_TEMPLATE = [[38.2946, 51.6963], [73.5318, 51.5014], [56.0252, 71.7366],
+    [41.5493, 92.3655], [70.7299, 92.2041]];
+  const FACE_OVERLAP = 0.3; // two finds of one face overlap more than this
 
   const shared = window.visualAssist;
   const $ = (id) => document.getElementById(id);
@@ -24,6 +29,9 @@
     loading: null, // the promise of models and assistant, made once
     detectors: [],
     currency: null,
+    manifest: null, // demo/models/models.json
+    faces: null, // the two face models, once someone has asked about a face
+    facesLoading: null,
     iou: 0.7,
     live: null, // the Python assistant
     pending: [], // questions waiting for the next picture: { text, spoken }
@@ -142,6 +150,7 @@
       megabytes += bytes / 1e6;
       setStatus(`Loading the models… ${megabytes.toFixed(0)} MB`);
     };
+    state.manifest = manifest;
     const specs = [...manifest.detectors, manifest.currency];
     const sessions = await Promise.all(specs.map((spec) => open(spec.file, progress)));
     state.iou = manifest.iou;
@@ -156,6 +165,51 @@
       spec.keep ? spec.keep.map((index) => spec.names[index]) : spec.names));
     const create = pyodide.runPython("from visual_assist.live import LiveAssistant\nLiveAssistant");
     state.live = create(pyodide.toPy(labels), say, isBusy, $("live-language").value);
+  }
+
+  // The two face models are large and many visitors never ask about a face,
+  // so they are fetched the first time someone does.
+  function needFaces() {
+    if (!state.facesLoading) {
+      state.facesLoading = (async () => {
+        const spec = state.manifest.faces;
+        let megabytes = 0;
+        const progress = (bytes) => {
+          megabytes += bytes / 1e6;
+          setStatus(`Loading the face models… ${megabytes.toFixed(0)} MB`);
+        };
+        try {
+          const [detector, recogniser] = await Promise.all(
+            [spec.detector, spec.recogniser].map((model) => open(model.file, progress)));
+          state.faces = {
+            ...spec,
+            detector: { session: detector, ...workspace(spec.detector.size) },
+            recogniser: { session: recogniser, ...workspace(spec.recogniser.size) },
+          };
+          state.live.use_faces(true);
+          setStatus("Ask a question, or point the camera somewhere else.");
+        } catch (error) {
+          console.error(error);
+          state.facesLoading = null; // the next question about a face tries again
+          setStatus("The face models could not be loaded, so faces cannot be recognised just now.");
+        }
+      })();
+    }
+    return state.facesLoading;
+  }
+
+  // Three colour planes of a square drawing, each value 0 to 255, in the
+  // order given: [2, 1, 0] is blue, green, red.
+  function levels({ size, context }, order) {
+    const pixels = context.getImageData(0, 0, size, size).data;
+    const area = size * size;
+    const values = new Float32Array(3 * area);
+    for (let i = 0, p = 0; i < area; i += 1, p += 4) {
+      values[i] = pixels[p + order[0]];
+      values[i + area] = pixels[p + order[1]];
+      values[i + 2 * area] = pixels[p + order[2]];
+    }
+    return new window.ort.Tensor("float32", values, [1, 3, size, size]);
   }
 
   // Red, green and blue planes of a square drawing, each value 0 to 1.
@@ -254,6 +308,90 @@
     return Object.fromEntries(spec.names.map((name, index) => [name, totals[index]]));
   }
 
+  // The 128 numbers that describe one face. Its five points say how the
+  // face is turned, tilted and sized: the picture is drawn turned, scaled and
+  // shifted so that they land where the recogniser expects them.
+  async function featureOf(points) {
+    const { size, context, session } = state.faces.recogniser;
+    const mean = (values) => values.reduce((sum, value) => sum + value, 0) / values.length;
+    const mx = mean(points.map((point) => point[0]));
+    const my = mean(points.map((point) => point[1]));
+    const ux = mean(FACE_TEMPLATE.map((point) => point[0]));
+    const uy = mean(FACE_TEMPLATE.map((point) => point[1]));
+    let dot = 0;
+    let cross = 0;
+    let spread = 0;
+    points.forEach(([x, y], index) => {
+      const px = x - mx;
+      const py = y - my;
+      const tx = FACE_TEMPLATE[index][0] - ux;
+      const ty = FACE_TEMPLATE[index][1] - uy;
+      dot += px * tx + py * ty;
+      cross += px * ty - py * tx;
+      spread += px * px + py * py;
+    });
+    const a = dot / spread;
+    const b = cross / spread;
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.fillStyle = "#000000";
+    context.fillRect(0, 0, size, size);
+    context.setTransform(a, b, -b, a, ux - (a * mx - b * my), uy - (b * mx + a * my));
+    context.drawImage(video, 0, 0);
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    const output = await session.run({ [session.inputNames[0]]: levels(state.faces.recogniser, [0, 1, 2]) });
+    return Array.from(output[session.outputNames[0]].data, (value) => Math.round(value * 1e4) / 1e4);
+  }
+
+  // The faces in the current picture: [x1, y1, x2, y2, feature] each, the
+  // largest first. Faces too small to tell apart are left out.
+  async function findFaces() {
+    const { detector, score: sure, min_px: narrowest, most } = state.faces;
+    const { size, context, session } = detector;
+    // The picture goes in the top left corner of a black square, shrunk if it must be.
+    const scale = Math.min(1, size / Math.max(video.videoWidth, video.videoHeight));
+    context.fillStyle = "#000000";
+    context.fillRect(0, 0, size, size);
+    context.drawImage(video, 0, 0, video.videoWidth * scale, video.videoHeight * scale);
+    const output = await session.run({ [session.inputNames[0]]: levels(detector, [2, 1, 0]) });
+
+    // The detector answers for every cell of three grids, coarse to fine.
+    const unit = (value) => Math.max(0, Math.min(1, value));
+    const found = [];
+    for (const stride of [8, 16, 32]) {
+      const columns = size / stride;
+      const seen = output[`cls_${stride}`].data;
+      const solid = output[`obj_${stride}`].data;
+      const box = output[`bbox_${stride}`].data;
+      const marks = output[`kps_${stride}`].data;
+      for (let i = 0; i < seen.length; i += 1) {
+        const score = Math.sqrt(unit(seen[i]) * unit(solid[i]));
+        if (score < sure) continue;
+        const column = i % columns;
+        const row = (i - column) / columns;
+        const width = (Math.exp(box[i * 4 + 2]) * stride) / scale;
+        const height = (Math.exp(box[i * 4 + 3]) * stride) / scale;
+        const left = ((column + box[i * 4]) * stride) / scale - width / 2;
+        const top = ((row + box[i * 4 + 1]) * stride) / scale - height / 2;
+        const points = [0, 1, 2, 3, 4].map((n) => [
+          ((marks[i * 10 + 2 * n] + column) * stride) / scale,
+          ((marks[i * 10 + 2 * n + 1] + row) * stride) / scale]);
+        found.push({ box: [left, top, left + width, top + height], points, score });
+      }
+    }
+    // Keep the surest of any finds that cover the same face.
+    found.sort((a, b) => b.score - a.score);
+    const kept = [];
+    for (const face of found) {
+      if (kept.every((other) => overlap(other.box, face.box) <= FACE_OVERLAP)) kept.push(face);
+    }
+    const area = ({ box: [x1, y1, x2, y2] }) => (x2 - x1) * (y2 - y1);
+    const near = kept.filter((face) => face.box[2] - face.box[0] >= narrowest)
+      .sort((a, b) => area(b) - area(a)).slice(0, most);
+    const faces = [];
+    for (const face of near) faces.push([...face.box.map(Math.round), await featureOf(face.points)]);
+    return faces;
+  }
+
   const thumbnailContext = (() => {
     const canvas = document.createElement("canvas");
     canvas.width = THUMBNAIL.width;
@@ -271,7 +409,7 @@
 
   // ------------------------------------------------------------------- drawing
 
-  function outline(detections) {
+  function outline(detections, people) {
     const style = getComputedStyle(document.documentElement);
     const colour = (name) => style.getPropertyValue(name).trim();
     overlay.width = video.videoWidth;
@@ -295,6 +433,17 @@
       context.fillStyle = door ? colour("--accent-ink") : "#ffffff";
       context.fillText(text, x1 + line * 1.5, top + line * 1.5);
     }
+    // Faces: a name where the assistant knows one.
+    for (const { box: [x1, y1, x2, y2], name } of people ? people.faces : []) {
+      const text = name || "not known";
+      const height = Math.max(13, overlay.width / 36) + 3 * line;
+      context.strokeStyle = name ? colour("--accent") : "#ffffff";
+      context.strokeRect(x1, y1, x2 - x1, y2 - y1);
+      context.fillStyle = name ? colour("--accent") : "#ffffff";
+      context.fillRect(x1 - line / 2, y2, context.measureText(text).width + 4 * line, height);
+      context.fillStyle = name ? colour("--accent-ink") : "#13202c";
+      context.fillText(text, x1 + line * 1.5, y2 + line * 1.5);
+    }
   }
 
   // ------------------------------------------- telling the diagram what happened
@@ -314,10 +463,11 @@
   }
 
   // One answered question as the steps it went through, in the form the
-  // "Inside the device" section plays (see demo/device.js). `note` is the
-  // banknote model's scores if it was asked; `said` is what was answered.
-  function report(question, note, said) {
-    const command = JSON.parse(state.live.command(question.text));
+  // "Inside the device" section plays (see demo/device.js). `command` is
+  // what the question was taken to be; `note` is the banknote model's scores
+  // if it was asked; `said` is what was answered; `people` is what was made
+  // of the faces in the picture, if faces were looked for.
+  function report(question, command, note, said, people) {
     const intent = command ? command.intent : null;
     const target = command ? command.target : null;
     const size = [video.videoWidth, video.videoHeight];
@@ -333,6 +483,9 @@
       const view = JSON.parse(state.live.view());
       steps.push({ kind: "live-see", bearing: 0, hfov: view.hfov, size, objects: view.objects, picture: snapshot(true) });
       steps.push({ kind: "live-absent", intent, target });
+    } else if (people && (intent === "who" || (intent === "register" && target))) {
+      // "Register face" with no name only asks for one: no face is looked at yet.
+      steps.push({ kind: "live-faces", size, people, picture: snapshot(true) });
     }
     for (const line of said) steps.push({ kind: "live-speak", ...line });
     tell("answer", { command: question.text, steps });
@@ -352,31 +505,39 @@
         // Questions first, so each is answered from the picture taken after it.
         const asked = state.pending.splice(0);
         let note = null;
+        let command = null;
+        state.answering = asked.length ? [] : null;
         for (const { text } of asked) {
-          if (state.live.intent(text) === "money") {
+          const intent = state.live.intent(text);
+          if (intent === "money") {
             note = await readNote();
             state.live.note(JSON.stringify(note));
           }
-          state.live.hear(text);
+          if (intent === "who" || intent === "register") await needFaces();
+          command = JSON.parse(state.live.hear(text));
         }
         const detections = [];
         for (const spec of state.detectors) detections.push(...await detect(spec));
+        const faces = state.faces ? await findFaces() : null;
         if (state.running !== run) return;
-        state.answering = asked.length ? [] : null;
-        state.live.see(JSON.stringify({
+        const picture = {
           w: video.videoWidth,
           h: video.videoHeight,
           thumb: thumbnail(),
           detections: detections.map(({ label, confidence, box }) => [label, confidence, ...box]),
-        }));
+        };
+        if (faces) picture.faces = faces;
+        state.live.see(JSON.stringify(picture));
         const said = state.answering;
         state.answering = null;
-        outline(detections);
-        if (asked.length) report(asked[asked.length - 1], note, said);
+        const people = faces ? JSON.parse(state.live.people()) : null;
+        outline(detections, people);
+        if (asked.length) report(asked[asked.length - 1], command, note, said, people);
         const seconds = (performance.now() - started) / 1000;
         const guiding = state.live.guiding;
-        $("live-meter").textContent = `${detections.length} recognised · ${seconds.toFixed(1)} s per picture`
-          + (guiding ? ` · guiding to the ${guiding}` : "");
+        $("live-meter").textContent = `${detections.length} recognised · `
+          + (people ? `${people.faces.length} ${people.faces.length === 1 ? "face" : "faces"} · ` : "")
+          + `${seconds.toFixed(1)} s per picture` + (guiding ? ` · guiding to the ${guiding}` : "");
       } catch (error) {
         console.error(error);
         stop();
@@ -477,6 +638,12 @@
     event.preventDefault();
     ask($("ask").value);
     $("ask").value = "";
+  });
+  $("face-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = $("face-name").value.trim();
+    if (name) ask(`Remember this person as ${name}`);
+    $("face-name").value = "";
   });
   $("live-language").addEventListener("change", () => {
     state.voiceMissing = "";

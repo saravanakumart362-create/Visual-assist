@@ -15,8 +15,9 @@ PyAudio
 # works without it, through espeak-ng on the Pi or the Windows voice.
 gTTS
 
-# Face recognition (builds dlib; on the Pi first: sudo apt install cmake).
-face_recognition
+# Face recognition needs nothing more: it uses two models that come with
+# OpenCV's model zoo (YuNet and SFace), downloaded to weights/ on first use.
+# They need OpenCV 4.8 or newer, which the opencv-python above provides.
 
 # Servos wired directly to the Pi's GPIO (not needed with the ESP8266).
 gpiozero; platform_machine == "aarch64" or platform_machine == "armv7l"

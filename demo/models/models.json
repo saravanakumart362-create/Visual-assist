@@ -120,5 +120,18 @@
    "50_old",
    "none"
   ]
+ },
+ "faces": {
+  "detector": {
+   "file": "face_detection_yunet_2023mar.onnx",
+   "size": 640
+  },
+  "recogniser": {
+   "file": "face_recognition_sface_2021dec.onnx",
+   "size": 112
+  },
+  "score": 0.8,
+  "min_px": 40,
+  "most": 5
  }
 }

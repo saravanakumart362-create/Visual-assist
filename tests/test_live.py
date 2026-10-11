@@ -1,6 +1,7 @@
 """The assistant on a live camera in the browser: fed by the page, not by hardware."""
 
 import json
+import math
 
 import pytest
 
@@ -21,17 +22,34 @@ class Page:
     def say(self, text, language, urgent):
         self.said.append((text, language))
 
-    def show(self, *detections, width=640, height=480, thumb=None):
-        """One analysed camera picture: detections are (label, confidence, x1, y1, x2, y2)."""
+    def show(self, *detections, width=640, height=480, thumb=None, faces=None):
+        """One analysed camera picture: detections are (label, confidence, x1, y1, x2, y2).
+
+        `faces`, if the page looked for any, are (width in pixels, angle):
+        see face() below.
+        """
         self.clock.advance(1.0)
-        self.live.see(json.dumps({"w": width, "h": height, "thumb": thumb or [],
-                                  "detections": [list(d) for d in detections]}))
+        picture = {"w": width, "h": height, "thumb": thumb or [],
+                   "detections": [list(d) for d in detections]}
+        if faces is not None:
+            picture["faces"] = [face(*found) for found in faces]
+        self.live.see(json.dumps(picture))
 
     def ask(self, text, *detections, **frame):
         self.said.clear()
         self.live.hear(text)
         self.show(*detections, **frame)
         return [text for text, _ in self.said]
+
+
+def face(width: float, angle_deg: float) -> list:
+    """A face as the page reports it: its box, then its feature.
+
+    The feature is made up: a direction in a plane, so that two faces are as
+    alike as the cosine of the angle between them.
+    """
+    angle = math.radians(angle_deg)
+    return [100, 100, 100 + width, 100 + width * 1.3, [math.cos(angle), math.sin(angle), 0.0, 0.0]]
 
 
 # A person 300 px tall on a 480 px picture is about 2.9 m away (1.65 m tall).
@@ -80,6 +98,71 @@ def test_reports_what_it_made_of_a_question_and_of_the_picture():
     page.show(("door", 0.8, 400, 200, 478, 440), width=480, height=640)
     view = json.loads(page.live.view())
     assert view["hfov"] == 48.8 and view["objects"][0]["bearing"] == 21
+
+
+def test_faces_found_by_the_page_are_registered_and_named():
+    page = Page()
+    # Until the page has loaded its face models there is no face recognition.
+    assert page.ask("who is this", faces=[(200, 0)]) == ["Face recognition is not available."]
+
+    page.live.use_faces(True)
+    assert page.ask("who is this", faces=[(200, 0)]) == ["I see one person I do not know."]
+    assert page.ask("remember this person as ashna", faces=[(200, 0)]) == [
+        "Registering Ashna. Please face the camera.", "Ashna has been registered."]
+    # Another picture of her (10 degrees off is still very like), beside a stranger.
+    assert page.ask("who is this", faces=[(120, 90), (200, 10)]) == [
+        "I see Ashna and one person I do not know."]
+    people = json.loads(page.live.people())
+    assert people["registered"] == ["Ashna"] and people["least"] == 0.45
+    assert [(found["name"], found["likeness"]) for found in people["faces"]] == [
+        ("Ashna", 0.985), (None, 0.0)]
+
+    # A face too far away is left out; one a little nearer is not close enough to register.
+    assert page.ask("who is this", faces=[(30, 0)]) == ["I do not see anyone."]
+    assert page.ask("remember this person as shafeek", faces=[(60, 90)])[:2] == [
+        "Registering Shafeek. Please face the camera.",
+        "I could not see a face. Please try again."]
+    # A picture the page did not look for faces in has none.
+    assert page.ask("who is this") == ["I do not see anyone."]
+
+
+def test_registered_people_are_announced_as_the_camera_meets_them():
+    page = Page()
+    page.live.use_faces(True)
+    page.ask("remember this person as ashna", faces=[(200, 0)])
+    page.said.clear()
+    for _ in range(6):  # faces are looked at every third picture
+        page.show(faces=[(200, 5)])
+    assert page.said == []  # she has only just been registered: no need to say so
+    page.clock.advance(30.0)
+    for _ in range(6):
+        page.show(faces=[(200, 5)])
+    assert [text for text, _ in page.said] == ["Ashna is in front of you."]
+
+
+def test_a_name_asked_for_is_taken_from_the_next_phrase():
+    """The device waits for the answer; a page must not, or it would freeze."""
+    page = Page()
+    page.live.use_faces(True)
+    assert json.loads(page.live.hear("register face")) == {"intent": "register", "target": None}
+    assert page.said[-1][0] == "What is the person's name?"
+    assert page.live.intent("ashna george") == "register"  # so the page looks for a face
+    assert json.loads(page.live.hear("ashna george")) == {
+        "intent": "register", "target": "Ashna George"}
+    page.show(faces=[(200, 0)])
+    assert page.said[-1][0] == "Ashna George has been registered."
+    assert page.live.intent("ashna george") is None  # an ordinary phrase again
+
+    page.live.hear("register face")
+    page.live.hear("stop")
+    assert page.said[-1][0] == "Registration cancelled."
+    page.live.hear("register face")
+    page.live.hear("42")  # not a name
+    assert page.said[-1][0] == "Registration cancelled."
+
+    # Without face models the question is not even asked.
+    page.live.use_faces(False)
+    assert page.ask("register face", faces=[(200, 0)]) == ["Face recognition is not available."]
 
 
 def test_an_upright_phone_picture_uses_the_right_field_of_view():

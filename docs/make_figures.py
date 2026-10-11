@@ -1174,7 +1174,8 @@ def demo_architecture() -> str:
     p.append(text(36, 134, "The visitor's browser", size=13, weight="700"))
 
     group(36, 150, 190, 216, "ONNX Runtime Web")
-    box(52, 244, 158, 72, ["yolov5nu.onnx", "doors.onnx", "currency.onnx"])
+    box(52, 236, 158, 88, ["yolov5nu.onnx", "doors.onnx", "currency.onnx",
+                           "and two face models"])
     group(290, 150, 200, 330, "The page's scripts")
     box(306, 184, 168, 52, ["demo.js", "the simulated room"])
     box(306, 254, 168, 52, ["live.js", "the camera section"])

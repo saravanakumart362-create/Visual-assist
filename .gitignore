@@ -5,6 +5,7 @@ __pycache__/
 # weights/currency.pt are part of the project and are kept.
 weights/yolov5nu.pt
 weights/yolov8n-cls.pt
+weights/face_*.onnx
 /*.pt
 
 # Downloaded speech model (the top-level folder only: demo/models holds

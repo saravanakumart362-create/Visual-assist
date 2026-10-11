@@ -166,7 +166,7 @@ def test_the_page_loads_every_file_the_guidance_needs(tmp_path):
     script = (DEMO / "demo.js").read_text(encoding="utf-8")
     listed = re.search(r"const FILES = \[(.*?)\];", script, re.S).group(1)
     files = re.findall(r'"([^"]+)"', listed)
-    assert "simulation.py" in files and "locales/en.json" in files
+    assert "simulation.py" in files and "locales/en.json" in files and "faces.py" in files
 
     for name in files:
         target = tmp_path / "visual_assist" / name
@@ -208,6 +208,16 @@ def test_the_browser_models_match_the_settings_the_device_uses():
     for spec in [main, doors, manifest["currency"]]:
         assert (DEMO / "models" / spec["file"]).stat().st_size > 1_000_000, spec["file"]
 
+    # The two face models are the device's own files, with its settings.
+    from visual_assist import faces
+
+    found = manifest["faces"]
+    assert (found["min_px"], found["score"], found["most"]) == (
+        cfg.faces.min_face_px, faces.DETECTION_SCORE, faces.MAX_FACES), advice
+    for part, setting in (("detector", cfg.faces.detector), ("recogniser", cfg.faces.recogniser)):
+        assert found[part]["file"] == Path(setting).name, advice
+        assert (DEMO / "models" / found[part]["file"]).stat().st_size > 100_000, advice
+
 
 def test_git_does_not_ignore_the_files_the_page_needs():
     """An ignored file never reaches GitHub, and the page then fails there."""
@@ -217,7 +227,9 @@ def test_git_does_not_ignore_the_files_the_page_needs():
               "demo/demo.css", "demo/recordings.json", "demo/device.json",
               "demo/models/models.json", "demo/models/doors.onnx",
               "demo/models/yolov5nu.onnx", "demo/models/currency.onnx",
-              "visual_assist/__init__.py", "visual_assist/live.py"]
+              "demo/models/face_detection_yunet_2023mar.onnx",
+              "demo/models/face_recognition_sface_2021dec.onnx",
+              "visual_assist/__init__.py", "visual_assist/live.py", "visual_assist/faces.py"]
     ignored = subprocess.run(["git", "check-ignore", *needed], cwd=ROOT,
                              capture_output=True, text=True).stdout.split()
     assert ignored == []

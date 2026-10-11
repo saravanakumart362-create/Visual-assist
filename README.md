@@ -30,7 +30,7 @@ PDF to download:
 | Find an object | The head sweeps the room, then turns to the object so the LiDAR can range it |
 | Guidance | Plans the shortest route around obstacles and speaks it one step at a time |
 | Adaptation | Warns earlier when you walk faster, says more when you hesitate, less on familiar trips |
-| Faces | Announces registered people, most familiar first; offers to register strangers |
+| Faces | Announces registered people, most familiar first; offers to register strangers. Uses OpenCV's own face models, so nothing has to be compiled |
 | Banknotes | Recognises ₹10, 20, 50, 100, 200, 500 and 2000 notes |
 | Languages | Speaks English, Malayalam, Hindi or Tamil |
 | Voice in | Vosk (offline) or Google Speech Recognition (online) |
@@ -89,9 +89,10 @@ driven by this project's own Python code, run in the browser by
   choose a language, press "Guide me to the door" and watch the route being
   found and spoken. Only the room and the sensors are simulated.
 - **Their own camera.** Visitors start their camera and ask "what is around
-  me", "where is the door", "what note is this" or "guide me to the chair",
-  by typing or (in Chrome and Edge) by voice. The detection, door and
-  banknote models run in the page, converted to ONNX and run by
+  me", "where is the door", "what note is this", "who is this" or "guide me
+  to the chair", by typing or (in Chrome and Edge) by voice. They can also
+  register a face by name and have it recognised. The detection, door,
+  banknote and face models run in the page, run by
   [ONNX Runtime](https://onnxruntime.ai); the picture never leaves the
   visitor's device. This is what `python main.py --keyboard` does on a
   laptop, with nothing to install.
@@ -109,8 +110,10 @@ driven by this project's own Python code, run in the browser by
   lacks (LiDAR, ESP8266, servos) are shown faded.
 
 The camera demonstration has no LiDAR and no turning head, so distances are
-camera estimates ("about 2 meters") and there is no route planning in it;
-face recognition is not included. Its first start downloads about 40 MB.
+camera estimates ("about 2 meters") and there is no route planning in it.
+Its first start downloads about 40 MB. The first question about a face
+downloads the two face models, 39 MB more. Faces registered in the page are
+kept only in its memory: they are forgotten when it is closed or reloaded.
 
 **Publish it with GitHub Pages:** push the project to GitHub, then in the
 repository open *Settings → Pages*, choose *Deploy from a branch*, select
@@ -266,7 +269,7 @@ sudo raspi-config
 # 2. System packages
 sudo apt update
 sudo apt install -y python3-picamera2 python3-opencv espeak-ng mpg123 \
-                    portaudio19-dev cmake
+                    portaudio19-dev
 
 # 3. Python packages (the venv must see the apt-installed picamera2)
 python3 -m venv --system-site-packages venv
@@ -280,7 +283,9 @@ unzip vosk-model-small-en-us-0.15.zip && cd ..
 ```
 
 Copy the whole project folder to the Pi, including `weights/doors.pt` and
-`weights/currency.pt`. Flash `firmware/esp8266_pan_tilt/esp8266_pan_tilt.ino`
+`weights/currency.pt`. The two face models (39 MB) are downloaded to
+`weights/` the first time the assistant starts with an internet connection;
+copy them from the PC as well if the Pi will have none. Flash `firmware/esp8266_pan_tilt/esp8266_pan_tilt.ino`
 to the ESP8266 with the Arduino IDE (board: *NodeMCU 1.0*), then plug it into
 the Pi.
 
@@ -293,6 +298,7 @@ python main.py --keyboard        # type commands instead of speaking
 python main.py --show            # also show the camera view with boxes
 python main.py --language hi     # speak Hindi
 python main.py register Ashna    # register the face in front of the camera
+                                 # (again later adds another view of them)
 ```
 
 Always run `check` first. Every device is optional: a missing LiDAR means
@@ -310,6 +316,8 @@ If "turn right" guidance sends the head left, set `servo.pan_invert: true`.
 | `weights/yolov5nu.pt` | 80 everyday objects (chair, sofa, table, bottle, cup, person, …) | COCO, by Ultralytics; downloaded on first run |
 | `weights/doors.pt` | Doors | DoorDetect + Open Images, by `training/train.py doors` |
 | `weights/currency.pt` | Indian banknotes | Mendeley banknote dataset, by `training/train.py currency` |
+| `weights/face_detection_yunet_2023mar.onnx` | Finds faces | By OpenCV's model zoo; downloaded on first use |
+| `weights/face_recognition_sface_2021dec.onnx` | Tells faces apart | By OpenCV's model zoo; downloaded on first use |
 
 ### How good the door model is
 
@@ -443,14 +451,19 @@ random rooms reached, the other three ending with a spoken stop, nothing
 ever touched); the door and banknote models on held-out photos (figures
 above); speech synthesis in all four languages; a short live trial on a
 webcam with typed questions; and the demo page in a headless browser, its
-camera part with saved photos standing in for the camera. The camera part
-has not been tried on a real camera or on a phone. The LiDAR and servo
+camera part (face registration and recognition included) with saved photos
+standing in for the camera. The camera part has not been tried on a real
+camera or on a phone. The LiDAR and servo
 drivers have been run only against the simulated LiDAR and ESP8266 that the
 device walkthrough uses.
 
+Face registration and recognition have been run on the PC with saved photos
+standing in for the camera: a person registered from one photo was named in
+other photos of them, and other people were not given that name. They have
+not been tried on a live camera.
+
 **Not verified:** anything on the Raspberry Pi itself — the Pi Camera, the
-TF-Luna, the servos and ESP8266, the microphone, and face recognition (its
-library is not installed on the development PC). Expect to adjust
+TF-Luna, the servos and ESP8266, and the microphone. Expect to adjust
 `config.yaml` when the hardware is first connected: serial ports,
 `pan_invert`, and the camera's field of view.
 
@@ -481,5 +494,11 @@ library is not installed on the development PC). Expect to adjust
   separately trained one handles doors, which keeps the pretrained model's
   accuracy on the former.
 
-Face data stays on the device: only numeric encodings are stored, in
-`data/faces/faces.json`.
+- *Face recognition.* Done with two models from OpenCV's model zoo: YuNet
+  finds the faces and SFace compares them. They run on whatever OpenCV is
+  installed. The widely used `face_recognition` library was tried first, but
+  it must be compiled on each machine and would not install on the
+  development PC.
+
+Face data stays on the device: only numbers describing each registered face
+are stored, in `data/faces/faces.json`, never photos.

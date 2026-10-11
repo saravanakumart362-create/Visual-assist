@@ -56,6 +56,8 @@ def check(cfg) -> int:
             if name == "speech":
                 voices = ", ".join(part.voices) or "none: print only"
                 status += f" (language {part.language}; voices: {voices})"
+            if name == "faces" and part is not None:
+                status += f" (registered: {', '.join(part.names) or 'nobody yet'})"
             if hasattr(part, "close"):
                 part.close()
         except Exception as exc:
@@ -68,16 +70,27 @@ def check(cfg) -> int:
 
 def register(cfg, name: str) -> int:
     from visual_assist.camera import open_camera
-    from visual_assist.faces import FaceBook
+    from visual_assist.faces import open_faces
 
-    faces = FaceBook(cfg.path(cfg.faces.dir), cfg.faces.tolerance)
+    faces = open_faces(cfg.faces, cfg.path)
+    if faces is None:
+        print("Face recognition is not available (see the warning above).")
+        return 1
     camera = open_camera(cfg.camera)
     try:
-        frame = camera.read()
+        # A camera's first pictures are often dark, and a face may be turned
+        # away for a moment: keep looking for a second or two.
+        done = False
+        for _ in range(30):
+            frame = camera.read()
+            if frame is not None and faces.register(name, frame):
+                done = True
+                break
     finally:
         camera.close()
-    if frame is None or not faces.register(name, frame):
-        print("No face found in the camera view.")
+    if not done:
+        print("No face found close enough to the camera. Face it from about "
+              "half a metre and try again.")
         return 1
     print(f"Registered {name}. Known people: {', '.join(faces.names)}")
     return 0

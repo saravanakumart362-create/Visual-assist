@@ -9,6 +9,9 @@ size, its confidence threshold, and its class names as the assistant
 speaks them. All of that is taken from config.yaml, so the page detects
 with the same settings as the device. Run this again after retraining a
 model or changing those settings.
+
+The two face models are ONNX files already, so they are only copied. A
+model that has not changed since it was last converted is left alone.
 """
 
 import json
@@ -22,7 +25,7 @@ sys.path.insert(0, str(ROOT))
 
 from ultralytics import YOLO  # noqa: E402
 
-from visual_assist import config  # noqa: E402
+from visual_assist import config, faces  # noqa: E402
 
 OUT = HERE / "models"
 OPSET = 17  # well within what onnxruntime-web supports
@@ -31,12 +34,26 @@ OPSET = 17  # well within what onnxruntime-web supports
 def convert(weights: Path, size: int) -> tuple:
     """Export one model. Returns (file name, class names by index)."""
     model = YOLO(str(weights))
-    exported = Path(model.export(format="onnx", imgsz=size, opset=OPSET, simplify=True))
     target = OUT / f"{weights.stem}.onnx"
-    shutil.move(str(exported), target)
+    if target.exists() and target.stat().st_mtime >= weights.stat().st_mtime:
+        print(f"{target.name}: up to date")
+    else:
+        exported = Path(model.export(format="onnx", imgsz=size, opset=OPSET, simplify=True))
+        shutil.move(str(exported), target)
+        print(f"{target.name}: {target.stat().st_size / 1e6:.1f} MB")
     names = [model.names[index] for index in sorted(model.names)]
-    print(f"{target.name}: {target.stat().st_size / 1e6:.1f} MB, {len(names)} classes")
     return target.name, names
+
+
+def copy(model: Path) -> str:
+    """Put a model that is already an ONNX file beside the others."""
+    if not faces.fetch(model):
+        raise SystemExit(f"{model} is missing and could not be downloaded")
+    target = OUT / model.name
+    if not target.exists() or target.stat().st_size != model.stat().st_size:
+        shutil.copyfile(model, target)
+        print(f"{target.name}: {target.stat().st_size / 1e6:.1f} MB")
+    return target.name
 
 
 def main() -> None:
@@ -64,6 +81,15 @@ def main() -> None:
     size = YOLO(str(weights)).overrides.get("imgsz", 256)
     file, names = convert(weights, size)
     manifest["currency"] = {"file": file, "size": size, "names": names}
+
+    # Faces: found by one model, told apart by another (see visual_assist/faces.py).
+    manifest["faces"] = {
+        "detector": {"file": copy(cfg.path(cfg.faces.detector)), "size": 640},
+        "recogniser": {"file": copy(cfg.path(cfg.faces.recogniser)), "size": 112},
+        "score": faces.DETECTION_SCORE,  # how sure the detector must be of a face
+        "min_px": cfg.faces.min_face_px,  # narrower faces are not looked at
+        "most": faces.MAX_FACES,  # faces looked at in one picture
+    }
 
     (OUT / "models.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
     print(f"wrote {OUT / 'models.json'}")

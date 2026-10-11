@@ -83,7 +83,13 @@ class ListenerConfig:
 class FacesConfig:
     enabled: bool = True
     dir: str = "data/faces"
-    tolerance: float = 0.5  # max face distance for a match (lower = stricter)
+    # OpenCV's face models; downloaded on first use if they are not there.
+    detector: str = "weights/face_detection_yunet_2023mar.onnx"
+    recogniser: str = "weights/face_recognition_sface_2021dec.onnx"
+    # Least likeness (0-1) for a face to be given a registered name. Higher
+    # is stricter: fewer wrong names, more "someone I do not know".
+    similarity: float = 0.45
+    min_face_px: int = 40  # narrower faces are too far away to tell apart
     every_n_frames: int = 3
     announce_cooldown_s: float = 20.0
 

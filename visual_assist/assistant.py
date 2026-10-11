@@ -33,6 +33,7 @@ OBSTACLE_CHANGE_M = 0.3
 URGENT_REPEAT_S = 1.5
 CROWD_NOTICE_S = 60.0
 ASK_TIMEOUT_S = 15.0
+REGISTER_TRIES = 5  # pictures tried when registering a face
 MAX_PAN_DEG = 90.0
 SAME_OBJECT_DEG = 15.0  # sightings this close in direction are one object
 FULL_CIRCLE_DEG = 360.0
@@ -364,12 +365,14 @@ class Assistant:
                 return
             name = name.strip().title()
         self.speaker.say(self.phrases.t("registering", name=name), wait=True)
-        frame = self.camera.read()
-        if frame is not None and self.faces.register(name, frame):
-            self._face_seen[name] = self._clock()
-            self._say("registered", name=name)
-        else:
-            self._say("no_face")
+        # One picture may catch a blink or a turned head: allow a few.
+        for _ in range(REGISTER_TRIES):
+            frame = self.camera.read()
+            if frame is not None and self.faces.register(name, frame):
+                self._face_seen[name] = self._clock()
+                self._say("registered", name=name)
+                return
+        self._say("no_face")
 
     def _cmd_money(self, _target) -> None:
         if self.currency is None:

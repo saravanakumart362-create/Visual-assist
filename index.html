@@ -117,6 +117,7 @@
           <button type="button" class="choice" data-ask="Where is the door?">Where is the door?</button>
           <button type="button" class="choice" data-ask="How far?">How far?</button>
           <button type="button" class="choice" data-ask="What note is this?">What note is this?</button>
+          <button type="button" class="choice" data-ask="Who is this?">Who is this?</button>
           <button type="button" class="choice" data-ask="Guide me to the chair">Guide me to the chair</button>
           <button type="button" class="choice" data-ask="Stop">Stop</button>
         </div>
@@ -125,6 +126,11 @@
           <input type="text" id="ask" autocomplete="off" placeholder="Type a question">
           <button type="submit" class="quiet">Ask</button>
           <button type="button" class="quiet" id="mic" hidden>Speak</button>
+        </form>
+        <form id="face-form" class="ask-form">
+          <label class="sr-only" for="face-name">Name of the person facing the camera</label>
+          <input type="text" id="face-name" autocomplete="off" placeholder="A name, to register the face in view">
+          <button type="submit" class="quiet">Register face</button>
         </form>
       </fieldset>
 
@@ -151,7 +157,8 @@
   <ul class="notes">
     <li>Distances here are estimates from how large things look, so they begin with "about". The device measures them with its LiDAR.</li>
     <li>Directions are given as the camera sees them. On a phone, use the back camera and point it the way you are facing.</li>
-    <li>Finding a way around obstacles needs the LiDAR sweep, so that part stays in the simulated room above. Face recognition is not included in the page.</li>
+    <li>Finding a way around obstacles needs the LiDAR sweep, so that part stays in the simulated room above.</li>
+    <li>Faces: the first "Who is this?" or registration downloads two more models, 39 MB. To register someone, have them face the camera from within about a metre. Registered faces are kept only in this page's memory and are forgotten when it is closed or reloaded.</li>
     <li>Questions are asked in English, whatever language the answers are in.</li>
   </ul>
 </section>
@@ -239,6 +246,7 @@
           <button type="button" class="choice" data-device-ask="Where is the door?">Where is the door?</button>
           <button type="button" class="choice" data-device-ask="How far?">How far?</button>
           <button type="button" class="choice" data-device-ask="What note is this?">What note is this?</button>
+          <button type="button" class="choice" data-device-ask="Who is this?">Who is this?</button>
         </div>
       </fieldset>
       <div class="sent" id="device-sent-box">
@@ -310,7 +318,7 @@
     </div>
     <div>
       <dt>Recognises people</dt>
-      <dd>Registered faces are announced by name, the most familiar first. A stranger can be registered by voice.</dd>
+      <dd>Registered faces are announced by name, the most familiar first. A stranger can be registered by voice. Try it with your own camera above.</dd>
     </div>
     <div>
       <dt>Reads banknotes</dt>
@@ -375,8 +383,8 @@ python -m pytest                      # the tests</code></pre>
 </footer>
 </div>
 
-<script src="demo/demo.js?v=b6dcb4c3" defer></script>
-<script src="demo/live.js?v=f80c0a80" defer></script>
-<script src="demo/device.js?v=c4cf2f47" defer></script>
+<script src="demo/demo.js?v=cc68290a" defer></script>
+<script src="demo/live.js?v=85ac9df6" defer></script>
+<script src="demo/device.js?v=bf4a6f85" defer></script>
 </body>
 </html>
