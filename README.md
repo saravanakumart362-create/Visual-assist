@@ -15,9 +15,10 @@ name (Government College of Engineering Kannur, April 2025).
 
 **Full technical documentation:** [docs/TECHNICAL.md](docs/TECHNICAL.md)
 covers the architecture, the wire protocols, the guidance algorithms, every
-setting, the models, the demo page and the tests. The same document as a
-PDF to download:
-[Visual-Assist-Technical-Documentation.pdf](docs/Visual-Assist-Technical-Documentation.pdf).
+setting, the models, the demo page and the tests. The same document to
+download, as a
+[PDF](docs/Visual-Assist-Technical-Documentation.pdf) or a
+[Word file](docs/Visual-Assist-Technical-Documentation.docx).
 
 ## What it does
 
